@@ -3,7 +3,7 @@ require 'sidekiq/api'
 
 module HealthMonitor
   module Providers
-    class SidekiqException < StandardError; end
+    class SidekiqException < HealthMonitor::Error; end
 
     class Sidekiq < Base
       class Configuration

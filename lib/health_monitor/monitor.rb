@@ -42,7 +42,7 @@ module HealthMonitor
       message: '',
       status: STATUSES[:ok]
     }
-  rescue StandardError => e
+  rescue HealthMonitor::Error, StandardError => e
     configuration.error_callback.call(e) if configuration.error_callback
 
     {

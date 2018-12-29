@@ -3,7 +3,7 @@ require 'resque'
 
 module HealthMonitor
   module Providers
-    class ResqueException < StandardError; end
+    class ResqueException < HealthMonitor::Error; end
 
     class Resque < Base
       def check!

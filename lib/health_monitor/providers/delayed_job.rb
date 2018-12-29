@@ -3,7 +3,7 @@ require 'delayed_job'
 
 module HealthMonitor
   module Providers
-    class DelayedJobException < StandardError; end
+    class DelayedJobException < HealthMonitor::Error; end
 
     class DelayedJob < Base
       class Configuration

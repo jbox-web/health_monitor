@@ -2,7 +2,7 @@ require 'health_monitor/providers/base'
 
 module HealthMonitor
   module Providers
-    class DatabaseException < StandardError; end
+    class DatabaseException < HealthMonitor::Error; end
 
     class Database < Base
       def check!

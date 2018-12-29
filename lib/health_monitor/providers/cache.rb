@@ -2,7 +2,7 @@ require 'health_monitor/providers/base'
 
 module HealthMonitor
   module Providers
-    class CacheException < StandardError; end
+    class CacheException < HealthMonitor::Error; end
 
     class Cache < Base
       def check!
