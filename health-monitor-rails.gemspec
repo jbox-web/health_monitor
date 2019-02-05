@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.files       = `git ls-files`.split("\n")
 
-  s.add_runtime_dependency 'rails', '>= 4.0'
+  s.add_runtime_dependency 'rails', '>= 5.0'
 
   s.add_development_dependency 'appraisal'
   s.add_development_dependency 'capybara'
@@ -27,8 +27,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rediska', '>= 1.0'
   s.add_development_dependency 'resque'
   s.add_development_dependency 'rspec-rails'
-  s.add_development_dependency 'rubocop', '>= 0.5'
-  s.add_development_dependency 'sidekiq', '>= 3.0'
+  s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'sidekiq'
   s.add_development_dependency 'spork'
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'timecop'
