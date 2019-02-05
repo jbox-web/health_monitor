@@ -1,23 +1,20 @@
-$LOAD_PATH.push File.expand_path('lib', __dir__)
-require 'health_monitor/version'
+# frozen_string_literal: true
+
+require_relative 'lib/health_monitor/version'
 
 Gem::Specification.new do |s|
-  s.name = 'health-monitor-rails'
-  s.version = HealthMonitor::VERSION
-  s.platform = Gem::Platform::RUBY
-  s.authors = ['Leonid Beder']
-  s.email = ['leonid.beder@gmail.com']
-  s.license = 'MIT'
-  s.homepage = 'https://github.com/lbeder/health-monitor-rails'
-  s.summary = 'Health monitoring Rails plug-in, which checks various services (db, cache, '\
-    'sidekiq, redis, etc.)'
-  s.description = 'Health monitoring Rails plug-in, which checks various services (db, cache, '\
-    'sidekiq, redis, etc.).'
+  s.name        = 'health-monitor-rails'
+  s.version     = HealthMonitor::VERSION
+  s.platform    = Gem::Platform::RUBY
+  s.authors     = ['Leonid Beder']
+  s.email       = ['leonid.beder@gmail.com']
+  s.homepage    = 'https://github.com/lbeder/health-monitor-rails'
+  s.summary     = 'Health monitoring Rails plug-in, which checks various services (db, cache, sidekiq, redis, etc.)'
+  s.license     = 'MIT'
 
-  s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
-  s.test_files = Dir['test/**/*']
+  s.files       = `git ls-files`.split("\n")
 
-  s.add_dependency 'rails', '>= 4.0'
+  s.add_runtime_dependency 'rails', '>= 4.0'
 
   s.add_development_dependency 'appraisal'
   s.add_development_dependency 'capybara'
