@@ -1,6 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
-gem 'rdoc'
-
-# Specify your gem's dependencies in rediska.gemspec
 gemspec
