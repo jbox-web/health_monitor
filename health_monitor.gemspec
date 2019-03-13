@@ -3,12 +3,12 @@
 require_relative 'lib/health_monitor/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'health-monitor-rails'
+  s.name        = 'health_monitor'
   s.version     = HealthMonitor::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Leonid Beder']
   s.email       = ['leonid.beder@gmail.com']
-  s.homepage    = 'https://github.com/lbeder/health-monitor-rails'
+  s.homepage    = 'https://github.com/jbox-web/health_monitor'
   s.summary     = 'Health monitoring Rails plug-in, which checks various services (db, cache, sidekiq, redis, etc.)'
   s.license     = 'MIT'
 
