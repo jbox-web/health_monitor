@@ -6,15 +6,18 @@ Gem::Specification.new do |s|
   s.name        = 'health_monitor'
   s.version     = HealthMonitor::VERSION::STRING
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ['Leonid Beder']
-  s.email       = ['leonid.beder@gmail.com']
+  s.authors     = ['Leonid Beder', 'Nicolas Rodriguez']
+  s.email       = ['leonid.beder@gmail.com', 'nicoladmin@free.fr']
   s.homepage    = 'https://github.com/jbox-web/health_monitor'
   s.summary     = 'Health monitoring Rails plug-in, which checks various services (db, cache, sidekiq, redis, etc.)'
   s.license     = 'MIT'
 
-  s.files       = `git ls-files`.split("\n")
+  s.required_ruby_version = '>= 2.4.4'
+
+  s.files = `git ls-files`.split("\n")
 
   s.add_runtime_dependency 'rails', '>= 5.0'
+  s.add_runtime_dependency 'zeitwerk'
 
   s.add_development_dependency 'appraisal'
   s.add_development_dependency 'capybara'

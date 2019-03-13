@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'health_monitor/providers/base'
-require 'resque'
-
 module HealthMonitor
   module Providers
     class ResqueException < HealthMonitor::Error::ServiceError; end

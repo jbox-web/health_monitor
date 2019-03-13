@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'health_monitor/providers/base'
-
 module HealthMonitor
   module Providers
     class DatabaseException < HealthMonitor::Error::ServiceError; end

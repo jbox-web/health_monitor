@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'health_monitor/providers/base'
-require 'sidekiq/api'
-
 module HealthMonitor
   module Providers
     class SidekiqException < HealthMonitor::Error::ServiceError; end

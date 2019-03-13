@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'health_monitor/providers/base'
-require 'delayed_job'
-
 module HealthMonitor
   module Providers
     class DelayedJobException < HealthMonitor::Error::ServiceError; end
