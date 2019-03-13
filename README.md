@@ -1,6 +1,10 @@
-# health-monitor-rails
+# HealthMonitor
 
-[![GitHub license](https://img.shields.io/github/license/jbox-web/health-monitor-rails.svg)](https://github.com/jbox-web/health-monitor-rails/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/jbox-web/health_monitor.svg)](https://github.com/jbox-web/health_monitor/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/jbox-web/health_monitor.svg)](https://github.com/jbox-web/health_monitor/releases/latest)
+[![Build Status](https://travis-ci.org/jbox-web/health_monitor.svg?branch=master)](https://travis-ci.org/jbox-web/health_monitor)
+[![Code Climate](https://codeclimate.com/github/jbox-web/health_monitor/badges/gpa.svg)](https://codeclimate.com/github/jbox-web/health_monitor)
+[![Test Coverage](https://codeclimate.com/github/jbox-web/health_monitor/badges/coverage.svg)](https://codeclimate.com/github/jbox-web/health_monitor/coverage)
 
 This is a health monitoring Rails mountable plug-in, which checks various services (db, cache, sidekiq, redis, etc.).
 
@@ -136,25 +140,17 @@ You can filter which checks to run by passing a parameter called ```providers```
 </hash>
 ```
 
-## Setup
+## Installation
 
-If you are using bundler add health-monitor-rails to your Gemfile:
+Put this in your `Gemfile` :
 
 ```ruby
-gem 'health-monitor-rails'
+git_source(:github){ |repo_name| "https://github.com/#{repo_name}.git" }
+
+gem 'health_monitor', github: 'jbox-web/health_monitor', tag: '8.5.0'
 ```
 
-Then run:
-
-```bash
-$ bundle install
-```
-
-Otherwise install the gem:
-
-```bash
-$ gem install health-monitor-rails
-```
+then run `bundle install`.
 
 ## Usage
 You can mount this inside your app routes by adding this to config/routes.rb:
