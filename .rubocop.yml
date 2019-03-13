@@ -36,6 +36,9 @@ Layout/AlignArray:
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
 
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
 Layout/IndentHash:
   EnforcedStyle: consistent
 
