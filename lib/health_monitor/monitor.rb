@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'health_monitor/configuration'
 
 module HealthMonitor
   STATUSES = {
-    ok: 'OK',
+    ok:      'OK',
     warning: 'WARNING',
-    error: 'ERROR'
+    error:   'ERROR'
   }.freeze
 
   extend self
@@ -44,7 +46,7 @@ module HealthMonitor
       status: STATUSES[:ok]
     }
   rescue HealthMonitor::Warning => e
-    configuration.error_callback.call(e) if configuration.error_callback
+    configuration.error_callback&.call(e)
 
     {
       name: provider.provider_name,
@@ -52,7 +54,7 @@ module HealthMonitor
       status: STATUSES[:warning]
     }
   rescue HealthMonitor::Error, StandardError => e
-    configuration.error_callback.call(e) if configuration.error_callback
+    configuration.error_callback&.call(e)
 
     {
       name: provider.provider_name,

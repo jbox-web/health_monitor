@@ -1,23 +1,22 @@
-# Custom config for RuboCop static code analysis
+AllCops:
+  TargetRubyVersion: 2.4
+  Exclude:
+    - bin/*
+    - extra/*
+    - gemfiles/*
+    - spec/**/*
+
 Metrics/LineLength:
   Max: 120
-  Exclude:
-    - 'spec/**/*'
 
 Metrics/MethodLength:
-  Max: 20
-  Exclude:
-    - 'spec/**/*'
+  Max: 22
 
 Metrics/AbcSize:
   Max: 20
-  Exclude:
-    - 'spec/**/*'
 
 Metrics/BlockLength:
   Max: 30
-  Exclude:
-    - 'spec/**/*'
 
 Style/SignalException:
   EnforcedStyle: only_raise
@@ -42,10 +41,6 @@ Layout/IndentHash:
 
 Style/Documentation:
   Enabled: false
-
-Style/BlockDelimiters:
-  Exclude:
-    - 'spec/**/*'
 
 Style/ModuleFunction:
   Enabled: false
