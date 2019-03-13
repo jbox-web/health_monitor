@@ -1,6 +1,4 @@
 require 'spec_helper'
-require 'timecop'
-require './app/controllers/health_monitor/health_controller'
 
 describe HealthMonitor::HealthController, type: :controller do
   routes { HealthMonitor::Engine.routes }
