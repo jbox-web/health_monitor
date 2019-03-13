@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Providers
   include RSpec::Mocks::ExampleMethods
 
