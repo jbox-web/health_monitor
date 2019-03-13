@@ -1,41 +1,35 @@
-require 'rubygems'
-require 'spork'
+ENV['RAILS_ENV'] ||= 'test'
+require File.expand_path('dummy/config/environment.rb', __dir__)
+
+require 'rspec/rails'
+require 'database_cleaner'
+require 'pry'
+require 'rediska'
 require 'sidekiq'
 
-Spork.prefork do
-  ENV['RAILS_ENV'] ||= 'test'
+Dir[File.expand_path('../lib/**/*.rb', __dir__)].each { |f| require f }
+Dir[File.expand_path('support/**/*.rb', __dir__)].each { |f| require f }
 
-  require File.expand_path('dummy/config/environment.rb', __dir__)
+RSpec.configure do |config|
+  config.mock_with :rspec
 
-  require 'rspec/rails'
-  require 'database_cleaner'
-  require 'pry'
-  require 'rediska'
+  config.include Capybara::DSL
 
-  Dir[File.expand_path('../lib/**/*.rb', __dir__)].each { |f| require f }
-  Dir[File.expand_path('support/**/*.rb', __dir__)].each { |f| require f }
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
 
-  RSpec.configure do |config|
-    config.mock_with :rspec
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
 
-    config.include Capybara::DSL
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
 
-    config.before(:suite) do
-      DatabaseCleaner.strategy = :transaction
-      DatabaseCleaner.clean_with(:truncation)
-    end
-
-    config.before(:each) do
-      DatabaseCleaner.start
-    end
-
-    config.after(:each) do
-      DatabaseCleaner.clean
-    end
-
-    config.after(:suite) do
-      FileUtils.rm_rf(File.expand_path('test.sqlite3', __dir__))
-    end
+  config.after(:suite) do
+    FileUtils.rm_rf(File.expand_path('test.sqlite3', __dir__))
   end
 end
 
