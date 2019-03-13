@@ -3,12 +3,7 @@
 module HealthMonitor
   class HealthController < ActionController::Base
     protect_from_forgery with: :exception
-
-    if Rails.version.starts_with? '3'
-      before_filter :authenticate_with_basic_auth
-    else
-      before_action :authenticate_with_basic_auth
-    end
+    before_action :authenticate_with_basic_auth
 
     def check
       @statuses = statuses
