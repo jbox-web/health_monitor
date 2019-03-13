@@ -4,7 +4,7 @@ require_relative 'lib/health_monitor/version'
 
 Gem::Specification.new do |s|
   s.name        = 'health_monitor'
-  s.version     = HealthMonitor::VERSION
+  s.version     = HealthMonitor::VERSION::STRING
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Leonid Beder']
   s.email       = ['leonid.beder@gmail.com']
