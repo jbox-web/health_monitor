@@ -1,3 +1,10 @@
+require 'simplecov'
+
+# Start SimpleCov
+SimpleCov.start do
+  add_filter 'spec/'
+end
+
 # Load Rails dummy app
 ENV['RAILS_ENV'] = 'test'
 require File.expand_path('dummy/config/environment.rb', __dir__)
