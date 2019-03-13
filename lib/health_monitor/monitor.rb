@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'health_monitor/configuration'
-
 module HealthMonitor
   STATUSES = {
     ok:      'OK',
@@ -45,7 +43,7 @@ module HealthMonitor
       message: '',
       status: STATUSES[:ok]
     }
-  rescue HealthMonitor::Warning => e
+  rescue HealthMonitor::Error::ServiceWarning => e
     configuration.error_callback&.call(e)
 
     {

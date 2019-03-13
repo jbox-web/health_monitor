@@ -4,7 +4,7 @@ require 'health_monitor/providers/base'
 
 module HealthMonitor
   module Providers
-    class DatabaseException < HealthMonitor::Error; end
+    class DatabaseException < HealthMonitor::Error::ServiceError; end
 
     class Database < Base
       def check!

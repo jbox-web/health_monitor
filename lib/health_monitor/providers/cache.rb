@@ -4,7 +4,7 @@ require 'health_monitor/providers/base'
 
 module HealthMonitor
   module Providers
-    class CacheException < HealthMonitor::Error; end
+    class CacheException < HealthMonitor::Error::ServiceError; end
 
     class Cache < Base
       def check!

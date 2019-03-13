@@ -4,7 +4,7 @@ require 'health_monitor/providers/base'
 
 module HealthMonitor
   module Providers
-    class RedisException < HealthMonitor::Error; end
+    class RedisException < HealthMonitor::Error::ServiceError; end
 
     class Redis < Base
       class Configuration

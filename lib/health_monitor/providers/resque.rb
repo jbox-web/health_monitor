@@ -5,7 +5,7 @@ require 'resque'
 
 module HealthMonitor
   module Providers
-    class ResqueException < HealthMonitor::Error; end
+    class ResqueException < HealthMonitor::Error::ServiceError; end
 
     class Resque < Base
       def check!
