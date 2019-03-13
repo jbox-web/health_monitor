@@ -8,7 +8,7 @@ module HealthMonitor
 
   module VERSION
     MAJOR = 8
-    MINOR = 4
+    MINOR = 5
     TINY  = 0
     PRE   = nil
 

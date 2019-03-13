@@ -1,5 +1,13 @@
 # Changelog
 
+## 8.5.0 (2019-03-13)
+
+- Drop support of Ruby 2.2
+- Drop support of Ruby 2.3
+- Add support of Ruby 2.6
+- Add support of Rails 6.x
+- Switch to Zeitwerk to load gem files
+
 ## 8.4.0 (2018-08-17)
 
 - Set custom UserAgent in check_rails script (thanks to @n-rodriguez).
