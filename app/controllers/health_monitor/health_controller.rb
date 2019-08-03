@@ -41,7 +41,7 @@ module HealthMonitor
     end
 
     def providers_params
-      params.permit(providers: [])
+      params.permit(:format, providers: [])
     end
   end
 end
