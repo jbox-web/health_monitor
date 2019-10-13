@@ -2,7 +2,7 @@
 
 [![GitHub license](https://img.shields.io/github/license/jbox-web/health_monitor.svg)](https://github.com/jbox-web/health_monitor/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/jbox-web/health_monitor.svg)](https://github.com/jbox-web/health_monitor/releases/latest)
-[![Build Status](https://travis-ci.org/jbox-web/health_monitor.svg?branch=master)](https://travis-ci.org/jbox-web/health_monitor)
+[![Build Status](https://travis-ci.com/jbox-web/health_monitor.svg?branch=master)](https://travis-ci.com/jbox-web/health_monitor)
 [![Code Climate](https://codeclimate.com/github/jbox-web/health_monitor/badges/gpa.svg)](https://codeclimate.com/github/jbox-web/health_monitor)
 [![Test Coverage](https://codeclimate.com/github/jbox-web/health_monitor/badges/coverage.svg)](https://codeclimate.com/github/jbox-web/health_monitor/coverage)
 
