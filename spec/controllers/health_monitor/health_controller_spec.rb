@@ -51,18 +51,14 @@ describe HealthMonitor::HealthController, type: :controller do
 
       context 'when filtering provider' do
         let(:params) do
-          if Rails.version >= '5'
-            { params: { providers: providers }, format: :json }
-          else
-            { providers: providers, format: :json }
-          end
+          { params: { providers: providers }, format: :json }
         end
 
         context 'multiple providers' do
           let(:providers) { %w[redis database] }
           it 'succesfully checks' do
             expect {
-              get :check, params
+              get :check, **params
             }.not_to raise_error
 
             expect(response).to be_ok
@@ -84,7 +80,7 @@ describe HealthMonitor::HealthController, type: :controller do
           let(:providers) { %w[redis] }
           it 'returns empty providers' do
             expect {
-              get :check, params
+              get :check, **params
             }.not_to raise_error
 
             expect(response).to be_ok
@@ -100,7 +96,7 @@ describe HealthMonitor::HealthController, type: :controller do
           let(:providers) { %w[foo-bar!] }
           it 'returns empty providers' do
             expect {
-              get :check, params
+              get :check, **params
             }.not_to raise_error
 
             expect(response).to be_ok
