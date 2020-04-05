@@ -1,5 +1,12 @@
 # Changelog
 
+## 8.6.0 (2020-04-05)
+
+- Add support of Ruby 2.7
+
+- This is the last version to support Ruby 2.4.x
+- This is the last version to support Rails 5.0.x
+
 ## 8.5.0 (2019-03-13)
 
 - Drop support of Ruby 2.2
