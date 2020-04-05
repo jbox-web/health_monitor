@@ -147,7 +147,7 @@ Put this in your `Gemfile` :
 ```ruby
 git_source(:github){ |repo_name| "https://github.com/#{repo_name}.git" }
 
-gem 'health_monitor', github: 'jbox-web/health_monitor', tag: '8.5.0'
+gem 'health_monitor', github: 'jbox-web/health_monitor', tag: '8.6.0'
 ```
 
 then run `bundle install`.
