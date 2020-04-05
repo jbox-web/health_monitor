@@ -6,7 +6,7 @@ AllCops:
     - gemfiles/*
     - spec/**/*
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
 Metrics/MethodLength:
@@ -24,13 +24,13 @@ Style/SignalException:
 Style/RaiseArgs:
   Enabled: false
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
 
-Layout/AlignArray:
+Layout/ArrayAlignment:
   Enabled: false
 
 Layout/MultilineOperationIndentation:
@@ -39,7 +39,7 @@ Layout/MultilineOperationIndentation:
 Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
-Layout/IndentHash:
+Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
 
 Style/Documentation:
@@ -51,3 +51,18 @@ Style/ModuleFunction:
 Lint/RescueException:
   Exclude:
     - 'lib/health_monitor/providers/**/*'
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
