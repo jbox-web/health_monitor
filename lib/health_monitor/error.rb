@@ -5,5 +5,6 @@ module HealthMonitor
     class BaseError      < StandardError; end
     class ServiceError   < BaseError; end
     class ServiceWarning < BaseError; end
+    class ServiceUnknown < BaseError; end
   end
 end
