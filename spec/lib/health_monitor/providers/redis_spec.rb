@@ -69,24 +69,24 @@ describe HealthMonitor::Providers::Redis do
     end
 
     describe '#connection' do
-      let(:redis_conenction) { double :redis_conenction, close: true }
+      let(:redis_connection) { double :redis_connection, close: true }
 
       it 'connection could be configured' do
         expect {
           described_class.configure do |config|
-            config.connection = redis_conenction
+            config.connection = redis_connection
           end
-        }.to change { described_class.new.configuration.connection }.to(redis_conenction)
+        }.to change { described_class.new.configuration.connection }.to(redis_connection)
       end
 
       it 'connection configuration is persistent accross instnaces' do
         expect {
           described_class.configure do |config|
-            config.connection = redis_conenction
+            config.connection = redis_connection
           end
 
           described_class.new
-        }.to change { described_class.new.configuration.connection }.to(redis_conenction)
+        }.to change { described_class.new.configuration.connection }.to(redis_connection)
       end
     end
 
