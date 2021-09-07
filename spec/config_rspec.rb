@@ -4,6 +4,9 @@ RSpec.configure do |config|
 
   config.mock_with :rspec
 
+  config.order = :random
+  Kernel.srand config.seed
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)

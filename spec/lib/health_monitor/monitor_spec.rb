@@ -115,7 +115,7 @@ describe HealthMonitor do
       before do
         subject.configure do |config|
           config.database
-          config.redis
+          config.redis.configure
         end
       end
 

@@ -29,6 +29,7 @@ describe HealthMonitor::Providers::Sidekiq do
 
   describe '#check!' do
     before do
+      described_class.configure
       Providers.stub_sidekiq
     end
 

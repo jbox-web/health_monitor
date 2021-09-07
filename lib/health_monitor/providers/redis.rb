@@ -6,7 +6,7 @@ module HealthMonitor
 
     class Redis < Base
       class Configuration
-        DEFAULT_URL = nil
+        DEFAULT_URL = 'redis://localhost:6379'
 
         attr_accessor :url, :connection, :max_used_memory
 
@@ -55,7 +55,7 @@ module HealthMonitor
       end
 
       def redis
-        @redis =
+        @redis ||= begin
           if configuration.connection
             configuration.connection
           elsif configuration.url
@@ -63,6 +63,7 @@ module HealthMonitor
           else
             ::Redis.new
           end
+        end
       end
 
       def bytes_to_megabytes(bytes)

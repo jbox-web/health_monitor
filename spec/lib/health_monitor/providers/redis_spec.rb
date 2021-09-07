@@ -15,14 +15,21 @@ describe HealthMonitor::Providers::Redis do
 
   describe '#check!' do
     context 'values' do
-      it 'succesfully checks' do
-        expect {
-          subject.check!
-        }.not_to raise_error
+      context 'success' do
+        before do
+          described_class.configure
+        end
+
+        it 'succesfully checks' do
+          expect {
+            subject.check!
+          }.not_to raise_error
+        end
       end
 
       context 'failing' do
         before do
+          described_class.configure
           Providers.stub_redis_failure
         end
 
@@ -35,10 +42,16 @@ describe HealthMonitor::Providers::Redis do
     end
 
     context 'max_used_memory' do
-      it 'succesfully checks' do
-        expect {
-          subject.check!
-        }.not_to raise_error
+      context 'success' do
+        before do
+          described_class.configure
+        end
+
+        it 'succesfully checks' do
+          expect {
+            subject.check!
+          }.not_to raise_error
+        end
       end
 
       context 'failing' do
