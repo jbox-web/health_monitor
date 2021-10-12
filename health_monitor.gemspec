@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = 'Health monitoring Rails plug-in, which checks various services (db, cache, sidekiq, redis, etc.)'
   s.license     = 'MIT'
 
-  s.required_ruby_version = '>= 2.5.0'
+  s.required_ruby_version = '>= 2.6.0'
 
   s.files = `git ls-files`.split("\n")
 
