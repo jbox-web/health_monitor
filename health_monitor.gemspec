@@ -16,14 +16,13 @@ Gem::Specification.new do |s|
 
   s.files = `git ls-files`.split("\n")
 
-  s.add_runtime_dependency 'rails', '>= 5.1'
+  s.add_runtime_dependency 'rails', '>= 5.2'
   s.add_runtime_dependency 'zeitwerk'
 
   s.add_development_dependency 'appraisal'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'capybara-screenshot'
   s.add_development_dependency 'database_cleaner'
-  s.add_development_dependency 'delayed_job_active_record', '>= 4.1'
   s.add_development_dependency 'guard-rspec'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rake'
