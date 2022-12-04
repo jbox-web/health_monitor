@@ -24,6 +24,13 @@ describe HealthMonitor::HealthController, type: :controller do
       end
     end
 
+    after do
+      HealthMonitor.configure do |config|
+        config.basic_auth_credentials = nil
+        config.environment_variables = nil
+      end
+    end
+
     context 'valid credentials provided' do
       before do
         request.env['HTTP_AUTHORIZATION'] =
