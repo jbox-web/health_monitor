@@ -52,7 +52,7 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
 
       - name: Setup Ruby cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-${{ hashFiles('**/Gemfile.lock') }}
@@ -69,7 +69,7 @@ jobs:
           bundle install --jobs 4 --retry 3
 
       - name: RSpec & publish code coverage
-        uses: paambaati/codeclimate-action@v2.7.5
+        uses: paambaati/codeclimate-action@v3.2.0
         env:
           RAILS_VERSION: ${{ matrix.rails }}
           BUNDLE_GEMFILE: gemfiles/${{ matrix.rails }}.gemfile
