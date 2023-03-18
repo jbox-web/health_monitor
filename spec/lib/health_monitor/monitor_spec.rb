@@ -13,6 +13,7 @@ describe HealthMonitor do
 
   after do
     Timecop.return
+    HealthMonitor.configuration = HealthMonitor::Configuration.new
   end
 
   describe '#configure' do
