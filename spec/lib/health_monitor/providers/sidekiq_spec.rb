@@ -11,18 +11,6 @@ describe HealthMonitor::Providers::Sidekiq do
 
   subject { described_class.new(request: test_request) }
 
-  before do
-    redis_conn = proc { Redis.new }
-
-    Sidekiq.configure_client do |config|
-      config.redis = ConnectionPool.new(&redis_conn)
-    end
-
-    Sidekiq.configure_server do |config|
-      config.redis = ConnectionPool.new(&redis_conn)
-    end
-  end
-
   describe '#provider_name' do
     it { expect(described_class.provider_name).to eq('Sidekiq') }
   end
