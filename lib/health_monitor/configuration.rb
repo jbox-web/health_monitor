@@ -8,6 +8,7 @@ module HealthMonitor
     attr_reader :providers
 
     def initialize
+      @providers = Set.new
       database
     end
 
@@ -34,8 +35,7 @@ module HealthMonitor
     private
 
     def add_provider(provider_class)
-      (@providers ||= Set.new) << provider_class
-
+      @providers << provider_class
       provider_class
     end
   end
