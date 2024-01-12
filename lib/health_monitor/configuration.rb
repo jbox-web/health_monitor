@@ -17,10 +17,15 @@ module HealthMonitor
     end
 
     PROVIDERS.each do |provider_name|
-      define_method provider_name do |&_block|
-        require "health_monitor/providers/#{provider_name}"
-        add_provider("HealthMonitor::Providers::#{provider_name.to_s.titleize.delete(' ')}".constantize)
-      end
+      klass = provider_name.to_s.titleize.delete(' ')
+
+      class_eval <<-METHOD, __FILE__, __LINE__ + 1
+        # frozen_string_literal: true
+        def #{provider_name}                                              # def database
+          require "health_monitor/providers/#{provider_name}"             #   require "health_monitor/providers/database"
+          add_provider("HealthMonitor::Providers::#{klass}".constantize)  #   add_provider("HealthMonitor::Providers::Database".constantize)
+        end                                                               # end
+      METHOD
     end
 
     def add_custom_provider(custom_provider_class)
