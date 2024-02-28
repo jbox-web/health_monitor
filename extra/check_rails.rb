@@ -3,7 +3,7 @@
 #         FILE: check_rails.rb
 #        USAGE: ./check_rails.rb -u <uri>
 #  DESCRIPTION: check Rails application status
-#       AUTHOR: Rodriguez Nicolas <nicoladmin@free.fr>
+#       AUTHOR: Rodriguez Nicolas <nico@nicoladmin.fr>
 #      LICENSE: The MIT License
 #===============================================================================
 

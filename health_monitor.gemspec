@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = HealthMonitor::VERSION::STRING
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Leonid Beder', 'Nicolas Rodriguez']
-  s.email       = ['leonid.beder@gmail.com', 'nicoladmin@free.fr']
+  s.email       = ['leonid.beder@gmail.com', 'nico@nicoladmin.fr']
   s.homepage    = 'https://github.com/jbox-web/health_monitor'
   s.summary     = 'Health monitoring Rails plug-in, which checks various services (db, cache, sidekiq, redis, etc.)'
   s.license     = 'MIT'
