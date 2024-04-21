@@ -3,7 +3,6 @@
 module HealthMonitor
   module Providers
     class Base
-
       attr_reader   :request
       attr_accessor :configuration
 
@@ -16,7 +15,6 @@ module HealthMonitor
       end
 
       class << self
-
         def provider_name
           @provider_name ||= name.demodulize
         end
@@ -35,14 +33,12 @@ module HealthMonitor
 
         def configuration_class
         end
-
       end
 
       # @abstract
       def check!
         raise NotImplementedError
       end
-
     end
   end
 end

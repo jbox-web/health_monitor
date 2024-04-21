@@ -3,6 +3,7 @@ require:
   - rubocop-capybara
   - rubocop-rake
   - rubocop-rspec
+  - rubocop-rspec_rails
 
 AllCops:
   NewCops: enable
@@ -12,6 +13,12 @@ AllCops:
     - extra/*
     - gemfiles/*
     - spec/**/*
+
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
+Gemspec/RequireMFA:
+  Enabled: false
 
 Layout/LineLength:
   Max: 120
@@ -73,3 +80,6 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
+
+Style/EmptyMethod:
+  Enabled: false
