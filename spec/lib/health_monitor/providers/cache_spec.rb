@@ -32,6 +32,6 @@ describe HealthMonitor::Providers::Cache do
   end
 
   describe '#key' do
-    it { expect(subject.send(:key)).to eq('health:0.0.0.0') }
+    it { expect(subject.instance_variable_get('@key')).to eq('health:0.0.0.0') }
   end
 end

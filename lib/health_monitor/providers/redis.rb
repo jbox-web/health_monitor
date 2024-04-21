@@ -23,22 +23,39 @@ module HealthMonitor
         end
       end
 
+      def initialize(request: nil)
+        super
+
+        @redis = redis_connection
+        @key = ['health', @request.try(:remote_ip)].join(':')
+      end
+
       def check!
         check_values!
         check_max_used_memory!
       rescue Exception => e
         raise RedisException.new(e.message)
       ensure
-        redis.close
+        @redis.close
       end
 
       private
 
+      def redis_connection
+        if configuration.connection
+          configuration.connection
+        elsif configuration.url
+          ::Redis.new(url: configuration.url)
+        else
+          ::Redis.new
+        end
+      end
+
       def check_values!
         time = Time.now.to_formatted_s(:rfc2822)
 
-        redis.set(key, time)
-        fetched = redis.get(key)
+        @redis.set(@key, time)
+        fetched = @redis.get(@key)
 
         raise "different values (now: #{time}, fetched: #{fetched})" if fetched != time
       end
@@ -50,28 +67,12 @@ module HealthMonitor
         raise "#{used_memory_mb}Mb memory using is higher than #{configuration.max_used_memory}Mb maximum expected"
       end
 
-      def key
-        @key ||= ['health', request.try(:remote_ip)].join(':')
-      end
-
-      def redis
-        @redis ||= begin
-          if configuration.connection
-            configuration.connection
-          elsif configuration.url
-            ::Redis.new(url: configuration.url)
-          else
-            ::Redis.new
-          end
-        end
-      end
-
       def bytes_to_megabytes(bytes)
         (bytes.to_f / 1024 / 1024).round
       end
 
       def used_memory_mb
-        bytes_to_megabytes(redis.info['used_memory'])
+        bytes_to_megabytes(@redis.info['used_memory'])
       end
     end
   end

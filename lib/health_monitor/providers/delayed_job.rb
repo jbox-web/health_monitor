@@ -15,6 +15,12 @@ module HealthMonitor
         end
       end
 
+      def initialize(request: nil)
+        super
+
+        @job_class = ::Delayed::Job
+      end
+
       def check!
         check_queue_size!
       rescue Exception => e
@@ -32,15 +38,11 @@ module HealthMonitor
       end
 
       def check_queue_size!
-        size = job_class.count
+        size = @job_class.count
 
         return unless size > configuration.queue_size
 
         raise "queue size #{size} is greater than #{configuration.queue_size}"
-      end
-
-      def job_class
-        @job_class ||= ::Delayed::Job
       end
     end
   end

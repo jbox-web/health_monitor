@@ -28,6 +28,12 @@ module HealthMonitor
         end
       end
 
+      def initialize(request: nil)
+        super
+
+        @queue = {}
+      end
+
       def check!
         check_workers!
         check_processes!
@@ -83,7 +89,6 @@ module HealthMonitor
       end
 
       def queue(queue_name)
-        @queue ||= {}
         @queue[queue_name] ||= ::Sidekiq::Queue.new(queue_name)
       end
     end
