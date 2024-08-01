@@ -173,6 +173,10 @@ describe HealthMonitor::Providers::Redis do
   end
 
   describe '#key' do
+    before do
+      described_class.configure
+    end
+
     it { expect(subject.instance_variable_get('@key')).to eq('health:0.0.0.0') }
   end
 end
