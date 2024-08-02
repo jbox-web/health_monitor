@@ -51,14 +51,6 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
 
-      - name: Setup Ruby cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-
-
       - name: Bundle
         env:
           RAILS_VERSION: ${{ matrix.rails }}
