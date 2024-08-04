@@ -2,6 +2,34 @@
 
 source "https://rubygems.org"
 
+gem "appraisal", git: "https://github.com/n-rodriguez/appraisal.git", branch: "wip/combustion"
+gem "capybara"
+gem "capybara-screenshot"
+gem "database_cleaner"
+gem "guard-rspec"
+gem "pry"
+gem "rake"
+gem "rediska", ">= 1.0"
+gem "resque"
+gem "rspec-rails"
+gem "rubocop"
+gem "rubocop-capybara"
+gem "rubocop-rake"
+gem "rubocop-rspec"
+gem "sidekiq"
+gem "simplecov"
+gem "sqlite3", "~> 1.5.0"
+gem "timecop"
 gem "rails", "7.0.8"
+
+install_if -> { Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.3.0") } do
+  gem "base64"
+  gem "bigdecimal"
+  gem "mutex_m"
+  gem "drb"
+  gem "logger"
+  gem "pstore"
+  gem "ostruct"
+end
 
 gemspec path: "../"

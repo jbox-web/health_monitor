@@ -16,41 +16,6 @@ Gem::Specification.new do |s|
 
   s.files = `git ls-files`.split("\n")
 
-  s.add_runtime_dependency 'rails', '>= 6.1'
-  s.add_runtime_dependency 'zeitwerk'
-
-  s.add_development_dependency 'appraisal'
-  s.add_development_dependency 'capybara'
-  s.add_development_dependency 'capybara-screenshot'
-  s.add_development_dependency 'database_cleaner'
-  s.add_development_dependency 'guard-rspec'
-  s.add_development_dependency 'pry'
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'rediska', '>= 1.0'
-  s.add_development_dependency 'resque'
-  s.add_development_dependency 'rspec-rails'
-  s.add_development_dependency 'rubocop'
-  s.add_development_dependency 'rubocop-capybara'
-  s.add_development_dependency 'rubocop-rake'
-  s.add_development_dependency 'rubocop-rspec'
-  s.add_development_dependency 'sidekiq'
-  s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'sqlite3', '~> 1.5.0'
-  s.add_development_dependency 'timecop'
-
-  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1.0')
-    s.add_development_dependency 'net-imap'
-    s.add_development_dependency 'net-pop'
-    s.add_development_dependency 'net-smtp'
-  end
-
-  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.4.0")
-    s.add_development_dependency "base64"
-    s.add_development_dependency "bigdecimal"
-    s.add_development_dependency "mutex_m"
-    s.add_development_dependency "drb"
-    s.add_development_dependency "logger"
-    s.add_development_dependency "pstore"
-    s.add_development_dependency "ostruct"
-  end
+  s.add_dependency 'rails', '>= 6.1'
+  s.add_dependency 'zeitwerk'
 end
