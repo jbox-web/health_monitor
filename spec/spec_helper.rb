@@ -45,3 +45,15 @@ def parse_xml(response)
   xml = response.body.gsub('type="symbol"', '')
   Hash.from_xml(xml)['hash']
 end
+
+# Mock out DJ
+module Delayed
+  class Job # rubocop:disable Lint/EmptyClass
+  end
+end
+
+class TestClass # rubocop:disable Lint/EmptyClass
+end
+
+class CustomProvider < HealthMonitor::Providers::Base
+end

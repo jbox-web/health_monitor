@@ -13,7 +13,7 @@ AllCops:
     - bin/*
     - extra/*
     - gemfiles/*
-    - spec/**/*
+    - spec/dummy/**/*
 
 Gemspec/RequireMFA:
   Enabled: false
@@ -37,12 +37,17 @@ Style/HashSyntax:
 Style/RescueStandardError:
   EnforcedStyle: implicit
 
+Style/BlockDelimiters:
+  AllowedPatterns: ['expect']
+
 ##########
 # LAYOUT #
 ##########
 
 Layout/LineLength:
   Max: 125
+  Exclude:
+    - spec/**/*
 
 Layout/EmptyLines:
   Enabled: false
@@ -62,3 +67,22 @@ Layout/EmptyLinesAroundModuleBody:
 Layout/HashAlignment:
   EnforcedColonStyle: table
   EnforcedHashRocketStyle: table
+
+#########
+# RSPEC #
+#########
+
+RSpec/NestedGroups:
+  Max: 5
+
+RSpec/MultipleExpectations:
+  Max: 4
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpecRails/HttpStatus:
+  EnforcedStyle: numeric
+
+RSpec/AnyInstance:
+  Enabled: false

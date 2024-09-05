@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.configure do |config|
   config.include Capybara::DSL
   config.include HealthMonitor::Engine.routes.url_helpers
@@ -16,15 +18,15 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.before(:each) do
+  config.after(:suite) do
+    FileUtils.rm_rf(File.expand_path('test.sqlite3', __dir__))
+  end
+
+  config.before do
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
+  config.after do
     DatabaseCleaner.clean
-  end
-
-  config.after(:suite) do
-    FileUtils.rm_rf(File.expand_path('test.sqlite3', __dir__))
   end
 end

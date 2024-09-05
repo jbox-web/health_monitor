@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'Health Monitor' do
@@ -10,9 +12,8 @@ RSpec.describe 'Health Monitor' do
   end
 
   context 'when check failed' do
-    before do
-      Providers.stub_database_failure
-    end
+    before { Providers.stub_database_failure }
+
     it 'renders html' do
       visit '/'
       expect(page).to have_css('span', class: 'name', text: 'Database')

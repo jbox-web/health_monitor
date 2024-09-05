@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe HealthMonitor::Providers::Sidekiq do
+  subject(:provider) { described_class.new(request: test_request) }
+
   describe HealthMonitor::Providers::Sidekiq::Configuration do
     describe 'defaults' do
       it { expect(described_class.new.latency).to eq(HealthMonitor::Providers::Sidekiq::Configuration::DEFAULT_LATENCY_TIMEOUT) }
@@ -8,8 +12,6 @@ RSpec.describe HealthMonitor::Providers::Sidekiq do
       it { expect(described_class.new.queue_name).to eq(HealthMonitor::Providers::Sidekiq::Configuration::DEFAULT_QUEUE_NAME) }
     end
   end
-
-  subject { described_class.new(request: test_request) }
 
   describe '#provider_name' do
     it { expect(described_class.provider_name).to eq('Sidekiq') }
@@ -23,78 +25,71 @@ RSpec.describe HealthMonitor::Providers::Sidekiq do
 
     it 'succesfully checks' do
       expect {
-        subject.check!
+        provider.check!
       }.not_to raise_error
     end
 
-    context 'failing' do
-      context 'workers' do
-        before do
-          Providers.stub_sidekiq_workers_failure
-        end
+    context 'when failing' do
+      describe 'workers' do
+        before { Providers.stub_sidekiq_workers_failure }
 
         it 'fails check!' do
           expect {
-            subject.check!
+            provider.check!
           }.to raise_error(HealthMonitor::Providers::SidekiqException)
         end
       end
 
-      context 'processes' do
-        before do
-          Providers.stub_sidekiq_no_processes_failure
-        end
+      describe 'processes' do
+        before { Providers.stub_sidekiq_no_processes_failure }
 
         it 'fails check!' do
           expect {
-            subject.check!
+            provider.check!
           }.to raise_error(HealthMonitor::Providers::SidekiqException)
         end
       end
 
-      context 'latency' do
-        before do
-          Providers.stub_sidekiq_latency_failure(queue)
-        end
+      describe 'latency' do
+        before { Providers.stub_sidekiq_latency_failure(queue) }
 
-        context 'fails' do
+        context 'when it fails' do
           let(:queue) { 'default' }
+
           it 'fails check!' do
             expect {
-              subject.check!
+              provider.check!
             }.to raise_error(HealthMonitor::Providers::SidekiqException)
           end
         end
-        context 'on a different queue' do
+
+        context 'when on a different queue' do
           let(:queue) { 'critical' }
+
           it 'successfully checks' do
             expect {
-              subject.check!
+              provider.check!
             }.not_to raise_error
           end
         end
       end
 
-      context 'queue_size' do
-        before do
-          Providers.stub_sidekiq_queue_size_failure
-        end
+      describe 'queue_size' do
+        before { Providers.stub_sidekiq_queue_size_failure }
 
         it 'fails check!' do
           expect {
-            subject.check!
+            provider.check!
           }.to raise_error(HealthMonitor::Providers::SidekiqException)
         end
       end
 
-      context 'redis' do
-        before do
-          Providers.stub_sidekiq_redis_failure
-        end
+      describe 'redis' do
+        before { Providers.stub_sidekiq_redis_failure }
 
         it 'fails check!' do
           expect {
-            subject.check!
+            provider.check!
           }.to raise_error(HealthMonitor::Providers::SidekiqException)
         end
       end
@@ -106,9 +101,7 @@ RSpec.describe HealthMonitor::Providers::Sidekiq do
   end
 
   describe '#configure' do
-    before do
-      described_class.configure
-    end
+    before { described_class.configure }
 
     let(:latency) { 123 }
 

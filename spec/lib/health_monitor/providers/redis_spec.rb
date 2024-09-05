@@ -1,33 +1,33 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe HealthMonitor::Providers::Redis do
+  subject(:provider) { described_class.new(request: test_request) }
+
   describe HealthMonitor::Providers::Redis::Configuration do
     describe 'defaults' do
       it { expect(described_class.new.url).to eq(HealthMonitor::Providers::Redis::Configuration::DEFAULT_URL) }
     end
   end
 
-  subject { described_class.new(request: test_request) }
-
   describe '#provider_name' do
     it { expect(described_class.provider_name).to eq('Redis') }
   end
 
   describe '#check!' do
-    context 'values' do
-      context 'success' do
-        before do
-          described_class.configure
-        end
+    describe 'values' do
+      context 'when success' do
+        before { described_class.configure }
 
         it 'succesfully checks' do
           expect {
-            subject.check!
+            provider.check!
           }.not_to raise_error
         end
       end
 
-      context 'failing' do
+      context 'when failing' do
         before do
           described_class.configure
           Providers.stub_redis_failure
@@ -35,26 +35,24 @@ RSpec.describe HealthMonitor::Providers::Redis do
 
         it 'fails check!' do
           expect {
-            subject.check!
+            provider.check!
           }.to raise_error(HealthMonitor::Providers::RedisException)
         end
       end
     end
 
-    context 'max_used_memory' do
-      context 'success' do
-        before do
-          described_class.configure
-        end
+    describe 'max_used_memory' do
+      context 'when success' do
+        before { described_class.configure }
 
         it 'succesfully checks' do
           expect {
-            subject.check!
+            provider.check!
           }.not_to raise_error
         end
       end
 
-      context 'failing' do
+      context 'when failing' do
         before do
           described_class.configure do |config|
             config.max_used_memory = 100
@@ -65,7 +63,7 @@ RSpec.describe HealthMonitor::Providers::Redis do
 
         it 'fails check!' do
           expect {
-            subject.check!
+            provider.check!
           }.to raise_error(HealthMonitor::Providers::RedisException, '954Mb memory using is higher than 100Mb maximum expected')
         end
       end
@@ -77,12 +75,10 @@ RSpec.describe HealthMonitor::Providers::Redis do
   end
 
   describe '#configure' do
-    before do
-      described_class.configure
-    end
+    before { described_class.configure }
 
     describe '#connection' do
-      let(:redis_connection) { double :redis_connection, close: true }
+      let(:redis_connection) { double :redis_connection, close: true } # rubocop:disable RSpec/VerifiedDoubles
 
       it 'connection could be configured' do
         expect {
@@ -173,10 +169,8 @@ RSpec.describe HealthMonitor::Providers::Redis do
   end
 
   describe '#key' do
-    before do
-      described_class.configure
-    end
+    before { described_class.configure }
 
-    it { expect(subject.instance_variable_get('@key')).to eq('health:0.0.0.0') }
+    it { expect(provider.instance_variable_get(:@key)).to eq('health:0.0.0.0') }
   end
 end

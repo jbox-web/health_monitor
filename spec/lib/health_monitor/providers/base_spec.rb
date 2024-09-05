@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe HealthMonitor::Providers::Base do
-  let(:request) { test_request }
+  subject(:provider) { described_class.new(request: request) }
 
-  subject { described_class.new(request: request) }
+  let(:request) { test_request }
 
   describe '#initialize' do
     it 'sets the request' do
@@ -18,7 +20,7 @@ RSpec.describe HealthMonitor::Providers::Base do
   describe '#check!' do
     it 'abstract' do
       expect {
-        subject.check!
+        provider.check!
       }.to raise_error(NotImplementedError)
     end
   end

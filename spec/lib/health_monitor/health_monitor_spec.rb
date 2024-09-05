@@ -1,68 +1,67 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe HealthMonitor do
-  let(:time) { Time.local(1990) }
-
   before do
-    HealthMonitor.configuration = HealthMonitor::Configuration.new
+    described_class.configuration = HealthMonitor::Configuration.new
 
     Timecop.freeze(time)
   end
 
-  let(:request) { test_request }
-
   after do
     Timecop.return
-    HealthMonitor.configuration = HealthMonitor::Configuration.new
+    described_class.configuration = HealthMonitor::Configuration.new
   end
+
+  let(:request) { test_request }
+
+  let(:time) { Time.local(1990) }
 
   describe '#configure' do
     describe 'providers' do
       it 'configures a single provider' do
         expect {
-          subject.configure(&:redis)
-        }.to change { HealthMonitor.configuration.providers }
+          described_class.configure(&:redis)
+        }.to change { described_class.configuration.providers }
           .to(Set.new([HealthMonitor::Providers::Database, HealthMonitor::Providers::Redis]))
       end
 
       it 'configures a single provider with custom configuration' do
         expect {
-          subject.configure(&:redis).configure do |redis_config|
+          described_class.configure(&:redis).configure do |redis_config|
             redis_config.url = 'redis://user:pass@example.redis.com:90210/'
           end
-        }.to change { HealthMonitor.configuration.providers }
+        }.to change { described_class.configuration.providers }
           .to(Set.new([HealthMonitor::Providers::Database, HealthMonitor::Providers::Redis]))
       end
 
       it 'configures a multiple providers' do
         expect {
-          subject.configure do |config|
+          described_class.configure do |config|
             config.redis
             config.sidekiq
           end
-        }.to change { HealthMonitor.configuration.providers }
-          .to(Set.new([HealthMonitor::Providers::Database, HealthMonitor::Providers::Redis,
-            HealthMonitor::Providers::Sidekiq]))
+        }.to change { described_class.configuration.providers }
+          .to(Set.new([HealthMonitor::Providers::Database, HealthMonitor::Providers::Redis, HealthMonitor::Providers::Sidekiq]))
       end
 
       it 'configures multiple providers with custom configuration' do
         expect {
-          subject.configure do |config|
+          described_class.configure do |config|
             config.redis
             config.sidekiq.configure do |sidekiq_config|
               sidekiq_config.add_queue_configuration('critical', latency: 10.seconds, queue_size: 20)
             end
           end
-        }.to change { HealthMonitor.configuration.providers }
-          .to(Set.new([HealthMonitor::Providers::Database, HealthMonitor::Providers::Redis,
-            HealthMonitor::Providers::Sidekiq]))
+        }.to change { described_class.configuration.providers }
+          .to(Set.new([HealthMonitor::Providers::Database, HealthMonitor::Providers::Redis, HealthMonitor::Providers::Sidekiq]))
       end
 
       it 'appends new providers' do
         expect {
-          subject.configure(&:resque)
-        }.to change { HealthMonitor.configuration.providers }.to(Set.new([HealthMonitor::Providers::Database,
-          HealthMonitor::Providers::Resque]))
+          described_class.configure(&:resque)
+        }.to change { described_class.configuration.providers }.to(Set.new([HealthMonitor::Providers::Database, HealthMonitor::Providers::Resque]))
       end
     end
 
@@ -72,10 +71,10 @@ RSpec.describe HealthMonitor do
         end
 
         expect {
-          subject.configure do |config|
+          described_class.configure do |config|
             config.error_callback = error_callback
           end
-        }.to change { HealthMonitor.configuration.error_callback }.to(error_callback)
+        }.to change { described_class.configuration.error_callback }.to(error_callback)
       end
     end
 
@@ -83,133 +82,133 @@ RSpec.describe HealthMonitor do
       it 'configures' do
         expected = {
           username: 'username',
-          password: 'password'
+          password: 'password',
         }
 
         expect {
-          subject.configure do |config|
+          described_class.configure do |config|
             config.basic_auth_credentials = expected
           end
-        }.to change { HealthMonitor.configuration.basic_auth_credentials }.to(expected)
+        }.to change { described_class.configuration.basic_auth_credentials }.to(expected)
       end
     end
   end
 
   describe '#check' do
-    context 'default providers' do
+    context 'with default providers' do
       it 'succesfully checks' do
-        expect(subject.check(request: request)).to eq(
-          results: [
+        expect(described_class.check(request: request)).to eq(
+          results:   [
             {
-              name: 'Database',
+              name:    'Database',
               message: '',
-              status: 'OK'
-            }
+              status:  'OK',
+            },
           ],
-          status: :ok,
+          status:    :ok,
           timestamp: time.to_formatted_s(:rfc2822)
         )
       end
     end
 
-    context 'db and redis providers' do
+    context 'with db and redis providers' do
       before do
-        subject.configure do |config|
+        described_class.configure do |config|
           config.database
           config.redis.configure
         end
       end
 
       it 'succesfully checks' do
-        expect(subject.check(request: request)).to eq(
-          results: [
+        expect(described_class.check(request: request)).to eq(
+          results:   [
             {
-              name: 'Database',
+              name:    'Database',
               message: '',
-              status: 'OK'
+              status:  'OK',
             },
             {
-              name: 'Redis',
+              name:    'Redis',
               message: '',
-              status: 'OK'
-            }
+              status:  'OK',
+            },
           ],
-          status: :ok,
+          status:    :ok,
           timestamp: time.to_formatted_s(:rfc2822)
         )
       end
 
-      context 'redis fails' do
+      context 'when redis fails' do
         before do
           Providers.stub_redis_failure
         end
 
         it 'fails check' do
-          expect(subject.check(request: request)).to eq(
-            results: [
+          expect(described_class.check(request: request)).to eq(
+            results:   [
               {
-                name: 'Database',
+                name:    'Database',
                 message: '',
-                status: 'OK'
+                status:  'OK',
               },
               {
-                name: 'Redis',
+                name:    'Redis',
                 message: "different values (now: #{time}, fetched: false)",
-                status: 'ERROR'
-              }
+                status:  'ERROR',
+              },
             ],
-            status: :service_unavailable,
+            status:    :service_unavailable,
             timestamp: time.to_formatted_s(:rfc2822)
           )
         end
       end
 
-      context 'sidekiq fails' do
+      context 'when sidekiq fails' do
         before do
           Providers.stub_sidekiq_workers_failure
         end
 
         it 'succesfully checks' do
-          expect(subject.check(request: request)).to eq(
-            results: [
+          expect(described_class.check(request: request)).to eq(
+            results:   [
               {
-                name: 'Database',
+                name:    'Database',
                 message: '',
-                status: 'OK'
+                status:  'OK',
               },
               {
-                name: 'Redis',
+                name:    'Redis',
                 message: '',
-                status: 'OK'
-              }
+                status:  'OK',
+              },
             ],
-            status: :ok,
+            status:    :ok,
             timestamp: time.to_formatted_s(:rfc2822)
           )
         end
       end
 
-      context 'both redis and db fail' do
+      context 'when both redis and db fail' do
         before do
           Providers.stub_database_failure
           Providers.stub_redis_failure
         end
 
         it 'fails check' do
-          expect(subject.check(request: request)).to eq(
-            results: [
+          expect(described_class.check(request: request)).to eq(
+            results:   [
               {
-                name: 'Database',
+                name:    'Database',
                 message: 'RuntimeError',
-                status: 'ERROR'
+                status:  'ERROR',
               },
               {
-                name: 'Redis',
+                name:    'Redis',
                 message: "different values (now: #{time}, fetched: false)",
-                status: 'ERROR'
-              }
+                status:  'ERROR',
+              },
             ],
-            status: :service_unavailable,
+            status:    :service_unavailable,
             timestamp: time.to_formatted_s(:rfc2822)
           )
         end
@@ -221,15 +220,15 @@ RSpec.describe HealthMonitor do
 
       let(:callback) do
         proc do |e|
-          expect(e).to be_present
-          expect(e).to be_is_a(Exception)
+          expect(e).to be_present # rubocop:disable RSpec/ExpectInLet
+          expect(e).to be_is_a(Exception) # rubocop:disable RSpec/ExpectInLet
 
           test = true
         end
       end
 
       before do
-        subject.configure do |config|
+        described_class.configure do |config|
           config.database
 
           config.error_callback = callback
@@ -239,15 +238,15 @@ RSpec.describe HealthMonitor do
       end
 
       it 'calls error_callback' do
-        expect(subject.check(request: request)).to eq(
-          results: [
+        expect(described_class.check(request: request)).to eq(
+          results:   [
             {
-              name: 'Database',
+              name:    'Database',
               message: 'RuntimeError',
-              status: 'ERROR'
-            }
+              status:  'ERROR',
+            },
           ],
-          status: :service_unavailable,
+          status:    :service_unavailable,
           timestamp: time.to_formatted_s(:rfc2822)
         )
 

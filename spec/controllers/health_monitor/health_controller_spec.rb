@@ -1,17 +1,15 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
-RSpec.describe HealthMonitor::HealthController, type: :controller do
+RSpec.describe HealthMonitor::HealthController, type: :controller do # rubocop:disable RSpecRails/InferredSpecType
   routes { HealthMonitor::Engine.routes }
 
   let(:time) { Time.local(1990) }
 
-  before do
-    Timecop.freeze(time)
-  end
+  before { Timecop.freeze(time) }
 
-  after do
-    Timecop.return
-  end
+  after { Timecop.return }
 
   describe 'basic authentication' do
     let(:username) { 'username' }
@@ -31,7 +29,7 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
       end
     end
 
-    context 'valid credentials provided' do
+    context 'with valid credentials provided' do
       before do
         request.env['HTTP_AUTHORIZATION'] =
           ActionController::HttpAuthentication::Basic.encode_credentials(username, password)
@@ -44,14 +42,14 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
 
         expect(response).to be_ok
         expect(JSON.parse(response.body)).to eq(
-          'results' => [
+          'results'   => [
             {
-              'name' => 'Database',
+              'name'    => 'Database',
               'message' => '',
-              'status' => 'OK'
-            }
+              'status'  => 'OK',
+            },
           ],
-          'status' => 'ok',
+          'status'    => 'ok',
           'timestamp' => time.to_formatted_s(:rfc2822)
         )
       end
@@ -61,8 +59,9 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
           { params: { providers: providers }, format: :json }
         end
 
-        context 'multiple providers' do
+        context 'with multiple providers' do
           let(:providers) { %w[redis database] }
+
           it 'succesfully checks' do
             expect {
               get :check, **params
@@ -70,21 +69,22 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
 
             expect(response).to be_ok
             expect(JSON.parse(response.body)).to eq(
-              'results' => [
+              'results'   => [
                 {
-                  'name' => 'Database',
+                  'name'    => 'Database',
                   'message' => '',
-                  'status' => 'OK'
-                }
+                  'status'  => 'OK',
+                },
               ],
-              'status' => 'ok',
+              'status'    => 'ok',
               'timestamp' => time.to_formatted_s(:rfc2822)
             )
           end
         end
 
-        context 'single provider' do
+        context 'with single provider' do
           let(:providers) { %w[redis] }
+
           it 'returns empty providers' do
             expect {
               get :check, **params
@@ -92,15 +92,16 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
 
             expect(response).to be_ok
             expect(JSON.parse(response.body)).to eq(
-              'results' => [],
-              'status' => 'ok',
+              'results'   => [],
+              'status'    => 'ok',
               'timestamp' => time.to_formatted_s(:rfc2822)
             )
           end
         end
 
-        context 'unknown provider' do
+        context 'with unknown provider' do
           let(:providers) { %w[foo-bar!] }
+
           it 'returns empty providers' do
             expect {
               get :check, **params
@@ -108,8 +109,8 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
 
             expect(response).to be_ok
             expect(JSON.parse(response.body)).to eq(
-              'results' => [],
-              'status' => 'ok',
+              'results'   => [],
+              'status'    => 'ok',
               'timestamp' => time.to_formatted_s(:rfc2822)
             )
           end
@@ -117,10 +118,9 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
       end
     end
 
-    context 'invalid credentials provided' do
+    context 'when invalid credentials provided' do
       before do
-        request.env['HTTP_AUTHORIZATION'] =
-          ActionController::HttpAuthentication::Basic.encode_credentials('', '')
+        request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials('', '')
       end
 
       it 'fails' do
@@ -129,7 +129,7 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
         }.not_to raise_error
 
         expect(response).not_to be_ok
-        expect(response.status).to eq(401)
+        expect(response).to have_http_status(401)
       end
     end
   end
@@ -144,7 +144,7 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
       end
     end
 
-    context 'valid environment variables synatx provided' do
+    context 'with valid environment variables synatx provided' do
       it 'succesfully checks' do
         expect {
           get :check, format: :json
@@ -152,18 +152,18 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
 
         expect(response).to be_ok
         expect(JSON.parse(response.body)).to eq(
-          'results' => [
+          'results'               => [
             {
-              'name' => 'Database',
+              'name'    => 'Database',
               'message' => '',
-              'status' => 'OK'
-            }
+              'status'  => 'OK',
+            },
           ],
-          'status' => 'ok',
-          'timestamp' => time.to_formatted_s(:rfc2822),
+          'status'                => 'ok',
+          'timestamp'             => time.to_formatted_s(:rfc2822),
           'environment_variables' => {
             'build_number' => '12',
-            'git_sha' => 'example_sha'
+            'git_sha'      => 'example_sha',
           }
         )
       end
@@ -178,7 +178,7 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
       end
     end
 
-    context 'json rendering' do
+    context 'with json rendering' do
       it 'succesfully checks' do
         expect {
           get :check, format: :json
@@ -186,47 +186,45 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
 
         expect(response).to be_ok
         expect(JSON.parse(response.body)).to eq(
-          'results' => [
+          'results'   => [
             {
-              'name' => 'Database',
+              'name'    => 'Database',
               'message' => '',
-              'status' => 'OK'
-            }
+              'status'  => 'OK',
+            },
           ],
-          'status' => 'ok',
+          'status'    => 'ok',
           'timestamp' => time.to_formatted_s(:rfc2822)
         )
       end
 
-      context 'failing' do
-        before do
-          Providers.stub_database_failure
-        end
+      context 'when failing' do
+        before { Providers.stub_database_failure }
 
-        it 'should fail' do
+        it 'fails' do
           expect {
             get :check, format: :json
           }.not_to raise_error
 
           expect(response).not_to be_ok
-          expect(response.status).to eq(503)
+          expect(response).to have_http_status(503)
 
           expect(JSON.parse(response.body)).to eq(
-            'results' => [
+            'results'   => [
               {
-                'name' => 'Database',
+                'name'    => 'Database',
                 'message' => 'RuntimeError',
-                'status' => 'ERROR'
-              }
+                'status'  => 'ERROR',
+              },
             ],
-            'status' => 'service_unavailable',
+            'status'    => 'service_unavailable',
             'timestamp' => time.to_formatted_s(:rfc2822)
           )
         end
       end
     end
 
-    context 'xml rendering' do
+    context 'with xml rendering' do
       it 'succesfully checks' do
         expect {
           get :check, format: :xml
@@ -234,40 +232,38 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do
 
         expect(response).to be_ok
         expect(parse_xml(response)).to eq(
-          'results' => [
+          'results'   => [
             {
-              'name' => 'Database',
+              'name'    => 'Database',
               'message' => nil,
-              'status' => 'OK'
-            }
+              'status'  => 'OK',
+            },
           ],
-          'status' => 'ok',
+          'status'    => 'ok',
           'timestamp' => time.to_formatted_s(:rfc2822)
         )
       end
 
-      context 'failing' do
-        before do
-          Providers.stub_database_failure
-        end
+      context 'when failing' do
+        before { Providers.stub_database_failure }
 
-        it 'should fail' do
+        it 'fails' do
           expect {
             get :check, format: :xml
           }.not_to raise_error
 
           expect(response).not_to be_ok
-          expect(response.status).to eq(503)
+          expect(response).to have_http_status(503)
 
           expect(parse_xml(response)).to eq(
-            'results' => [
+            'results'   => [
               {
-                'name' => 'Database',
+                'name'    => 'Database',
                 'message' => 'RuntimeError',
-                'status' => 'ERROR'
-              }
+                'status'  => 'ERROR',
+              },
             ],
-            'status' => 'service_unavailable',
+            'status'    => 'service_unavailable',
             'timestamp' => time.to_formatted_s(:rfc2822)
           )
         end

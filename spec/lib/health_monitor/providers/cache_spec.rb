@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe HealthMonitor::Providers::Cache do
-  subject { described_class.new(request: test_request) }
+  subject(:provider) { described_class.new(request: test_request) }
 
   describe '#provider_name' do
     it { expect(described_class.provider_name).to eq('Cache') }
@@ -10,18 +12,16 @@ RSpec.describe HealthMonitor::Providers::Cache do
   describe '#check!' do
     it 'succesfully checks' do
       expect {
-        subject.check!
+        provider.check!
       }.not_to raise_error
     end
 
-    context 'failing' do
-      before do
-        Providers.stub_cache_failure
-      end
+    context 'when failing' do
+      before { Providers.stub_cache_failure }
 
       it 'fails check!' do
         expect {
-          subject.check!
+          provider.check!
         }.to raise_error(HealthMonitor::Providers::CacheException)
       end
     end
@@ -32,6 +32,6 @@ RSpec.describe HealthMonitor::Providers::Cache do
   end
 
   describe '#key' do
-    it { expect(subject.instance_variable_get('@key')).to eq('health:0.0.0.0') }
+    it { expect(provider.instance_variable_get(:@key)).to eq('health:0.0.0.0') }
   end
 end
