@@ -22,7 +22,7 @@ module HealthMonitor
         end
 
         def add_queue_configuration(queue_name, latency: DEFAULT_LATENCY_TIMEOUT, queue_size: DEFAULT_QUEUES_SIZE)
-          raise SidekiqException.new('Queue name is mandatory') if queue_name.blank?
+          raise SidekiqException, 'Queue name is mandatory' if queue_name.blank?
 
           queues[queue_name] = { latency: latency, queue_size: queue_size }
         end
@@ -40,8 +40,8 @@ module HealthMonitor
         check_latency!
         check_queue_size!
         check_redis!
-      rescue Exception => e
-        raise SidekiqException.new(e)
+      rescue => e
+        raise SidekiqException, e
       end
 
       private

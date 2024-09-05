@@ -200,7 +200,7 @@ describe HealthMonitor do
             results: [
               {
                 name: 'Database',
-                message: 'Exception',
+                message: 'RuntimeError',
                 status: 'ERROR'
               },
               {
@@ -243,7 +243,7 @@ describe HealthMonitor do
           results: [
             {
               name: 'Database',
-              message: 'Exception',
+              message: 'RuntimeError',
               status: 'ERROR'
             }
           ],

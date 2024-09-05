@@ -33,8 +33,8 @@ module HealthMonitor
       def check!
         check_values!
         check_max_used_memory!
-      rescue Exception => e
-        raise RedisException.new(e.message)
+      rescue => e
+        raise RedisException, e.message
       ensure
         @redis.close
       end

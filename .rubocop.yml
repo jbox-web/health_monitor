@@ -15,72 +15,50 @@ AllCops:
     - gemfiles/*
     - spec/**/*
 
-Gemspec/DevelopmentDependencies:
-  Enabled: false
-
 Gemspec/RequireMFA:
   Enabled: false
 
-Layout/LineLength:
-  Max: 120
-
-Metrics/MethodLength:
-  Max: 22
-
-Metrics/AbcSize:
-  Max: 20
-
-Metrics/BlockLength:
-  Max: 30
-
-Style/SignalException:
-  EnforcedStyle: only_raise
-
-Style/RaiseArgs:
-  Enabled: false
-
-Layout/ParameterAlignment:
-  EnforcedStyle: with_fixed_indentation
-
-Layout/HashAlignment:
-  Enabled: false
-
-Layout/ArrayAlignment:
-  Enabled: false
-
-Layout/MultilineOperationIndentation:
-  EnforcedStyle: indented
-
-Layout/EmptyLinesAroundModuleBody:
-  Enabled: false
-
-Layout/FirstHashElementIndentation:
-  EnforcedStyle: consistent
+#########
+# STYLE #
+#########
 
 Style/Documentation:
   Enabled: false
 
-Style/ModuleFunction:
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
+
+Style/RescueStandardError:
+  EnforcedStyle: implicit
+
+##########
+# LAYOUT #
+##########
+
+Layout/LineLength:
+  Max: 125
+
+Layout/EmptyLines:
   Enabled: false
 
-Lint/RescueException:
-  Exclude:
-    - 'lib/health_monitor/providers/**/*'
-
-Lint/RaiseException:
-  Enabled: true
-
-Lint/StructNewOverride:
-  Enabled: true
-
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
-
-Style/EmptyMethod:
+Layout/EmptyLineBetweenDefs:
   Enabled: false
+
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Layout/HashAlignment:
+  EnforcedColonStyle: table
+  EnforcedHashRocketStyle: table

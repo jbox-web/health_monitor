@@ -7,8 +7,8 @@ module HealthMonitor
     class Resque < Base
       def check!
         ::Resque.info
-      rescue Exception => e
-        raise ResqueException.new(e.message)
+      rescue => e
+        raise ResqueException, e.message
       end
     end
   end

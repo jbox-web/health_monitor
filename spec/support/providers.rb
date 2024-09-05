@@ -8,7 +8,7 @@ module Providers
   end
 
   def stub_database_failure
-    allow(ActiveRecord::Migrator).to receive(:current_version).and_raise(Exception)
+    allow(ActiveRecord::Migrator).to receive(:current_version).and_raise(RuntimeError)
   end
 
   def stub_redis_failure
@@ -20,7 +20,7 @@ module Providers
   end
 
   def stub_resque_failure
-    allow(Resque).to receive(:info).and_raise(Exception)
+    allow(Resque).to receive(:info).and_raise(RuntimeError)
   end
 
   def stub_sidekiq
@@ -28,7 +28,7 @@ module Providers
   end
 
   def stub_sidekiq_workers_failure
-    allow_any_instance_of(Sidekiq::Workers).to receive(:size).and_raise(Exception)
+    allow_any_instance_of(Sidekiq::Workers).to receive(:size).and_raise(RuntimeError)
   end
 
   def stub_sidekiq_no_processes_failure

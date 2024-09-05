@@ -10,7 +10,7 @@ module HealthMonitor
   STATUSES = {
     ok:      'OK',
     warning: 'WARNING',
-    error:   'ERROR'
+    error:   'ERROR',
   }.freeze
 
   extend self
@@ -23,7 +23,7 @@ module HealthMonitor
     yield configuration if block_given?
   end
 
-  def check(request: nil, params: {})
+  def check(request: nil, params: {}) # rubocop:disable Metrics/AbcSize
     providers = configuration.providers
     if params[:providers].present?
       providers = providers.select { |provider| params[:providers].include?(provider.provider_name.downcase) }
@@ -32,38 +32,38 @@ module HealthMonitor
     results = providers.map { |provider| provider_result(provider, request) }
 
     {
-      results: results,
-      status: results.any? { |res| res[:status] != STATUSES[:ok] } ? :service_unavailable : :ok,
-      timestamp: Time.now.to_formatted_s(:rfc2822)
+      results:   results,
+      status:    results.any? { |res| res[:status] != STATUSES[:ok] } ? :service_unavailable : :ok,
+      timestamp: Time.now.to_formatted_s(:rfc2822),
     }
   end
 
   private
 
-  def provider_result(provider, request)
+  def provider_result(provider, request) # rubocop:disable Metrics/MethodLength
     monitor = provider.new(request: request)
     monitor.check!
 
     {
-      name: provider.provider_name,
+      name:    provider.provider_name,
       message: '',
-      status: STATUSES[:ok]
+      status:  STATUSES[:ok],
     }
   rescue HealthMonitor::Error::ServiceWarning => e
     configuration.error_callback&.call(e)
 
     {
-      name: provider.provider_name,
+      name:    provider.provider_name,
       message: e.message,
-      status: STATUSES[:warning]
+      status:  STATUSES[:warning],
     }
   rescue HealthMonitor::Error, StandardError => e
     configuration.error_callback&.call(e)
 
     {
-      name: provider.provider_name,
+      name:    provider.provider_name,
       message: e.message,
-      status: STATUSES[:error]
+      status:  STATUSES[:error],
     }
   end
 end

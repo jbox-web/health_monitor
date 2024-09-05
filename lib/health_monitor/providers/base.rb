@@ -11,7 +11,7 @@ module HealthMonitor
 
         return unless self.class.configurable?
 
-        self.configuration = self.class.instance_variable_get('@global_configuration')
+        self.configuration = self.class.instance_variable_get(:@global_configuration)
       end
 
       class << self
@@ -31,8 +31,7 @@ module HealthMonitor
           configuration_class
         end
 
-        def configuration_class
-        end
+        def configuration_class; end
       end
 
       # @abstract

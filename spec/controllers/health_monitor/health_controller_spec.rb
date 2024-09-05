@@ -215,7 +215,7 @@ describe HealthMonitor::HealthController, type: :controller do
             'results' => [
               {
                 'name' => 'Database',
-                'message' => 'Exception',
+                'message' => 'RuntimeError',
                 'status' => 'ERROR'
               }
             ],
@@ -263,7 +263,7 @@ describe HealthMonitor::HealthController, type: :controller do
             'results' => [
               {
                 'name' => 'Database',
-                'message' => 'Exception',
+                'message' => 'RuntimeError',
                 'status' => 'ERROR'
               }
             ],

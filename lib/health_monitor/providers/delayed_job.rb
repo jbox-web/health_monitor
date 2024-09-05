@@ -23,8 +23,8 @@ module HealthMonitor
 
       def check!
         check_queue_size!
-      rescue Exception => e
-        raise DelayedJobException.new(e.message)
+      rescue => e
+        raise DelayedJobException, e.message
       end
 
       private
