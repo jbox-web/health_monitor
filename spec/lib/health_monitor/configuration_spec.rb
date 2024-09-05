@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HealthMonitor::Configuration do
+RSpec.describe HealthMonitor::Configuration do
   let(:default_configuration) { Set.new([HealthMonitor::Providers::Database]) }
 
   describe 'defaults' do

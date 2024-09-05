@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HealthMonitor::Providers::Database do
+RSpec.describe HealthMonitor::Providers::Database do
   subject { described_class.new(request: test_request) }
 
   describe '#provider_name' do

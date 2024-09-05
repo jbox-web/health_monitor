@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HealthMonitor::HealthController, type: :controller do
+RSpec.describe HealthMonitor::HealthController, type: :controller do
   routes { HealthMonitor::Engine.routes }
 
   let(:time) { Time.local(1990) }

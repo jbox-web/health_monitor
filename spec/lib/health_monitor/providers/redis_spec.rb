@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HealthMonitor::Providers::Redis do
+RSpec.describe HealthMonitor::Providers::Redis do
   describe HealthMonitor::Providers::Redis::Configuration do
     describe 'defaults' do
       it { expect(described_class.new.url).to eq(HealthMonitor::Providers::Redis::Configuration::DEFAULT_URL) }

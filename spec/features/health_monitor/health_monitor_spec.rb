@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Health Monitor' do
+RSpec.describe 'Health Monitor' do
   context 'when check is ok' do
     it 'renders html' do
       visit '/'

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HealthMonitor do
+RSpec.describe HealthMonitor do
   let(:time) { Time.local(1990) }
 
   before do

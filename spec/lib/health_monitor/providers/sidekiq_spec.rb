@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HealthMonitor::Providers::Sidekiq do
+RSpec.describe HealthMonitor::Providers::Sidekiq do
   describe HealthMonitor::Providers::Sidekiq::Configuration do
     describe 'defaults' do
       it { expect(described_class.new.latency).to eq(HealthMonitor::Providers::Sidekiq::Configuration::DEFAULT_LATENCY_TIMEOUT) }
