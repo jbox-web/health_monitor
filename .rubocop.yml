@@ -11,9 +11,9 @@ AllCops:
   TargetRubyVersion: 3.1
   Exclude:
     - bin/*
-    - extra/*
     - gemfiles/*
     - spec/dummy/**/*
+    - extra/*
 
 Gemspec/RequireMFA:
   Enabled: false
