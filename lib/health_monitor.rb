@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
+# require external dependencies
 require 'zeitwerk'
-loader = Zeitwerk::Loader.for_gem
-loader.setup
+
+# load zeitwerk
+Zeitwerk::Loader.for_gem.tap do |loader| # rubocop:disable Style/SymbolProc
+  loader.setup
+end
 
 module HealthMonitor
-  require 'health_monitor/engine' if defined?(Rails)
+  require_relative 'health_monitor/engine' if defined?(Rails)
 
   STATUSES = {
     ok:      'OK',
