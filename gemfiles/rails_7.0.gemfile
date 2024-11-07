@@ -23,6 +23,16 @@ gem "sidekiq"
 gem "simplecov"
 gem "sqlite3", "~> 1.5.0"
 gem "timecop"
-gem "rails", "7.2.0"
+gem "rails", "~> 7.0.0"
+
+install_if -> { Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.3.0") } do
+  gem "base64"
+  gem "bigdecimal"
+  gem "mutex_m"
+  gem "drb"
+  gem "logger"
+  gem "pstore"
+  gem "ostruct"
+end
 
 gemspec path: "../"
