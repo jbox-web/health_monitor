@@ -52,12 +52,12 @@ module HealthMonitor
       end
 
       def check_values!
-        time = Time.now.to_formatted_s(:rfc2822)
+        time = Time.now
 
         @redis.set(@key, time)
         fetched = @redis.get(@key)
 
-        raise "different values (now: #{time}, fetched: #{fetched})" if fetched != time
+        raise "different values (now: #{time}, fetched: #{fetched})" if fetched != time.to_s
       end
 
       def check_max_used_memory!
