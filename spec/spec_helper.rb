@@ -13,14 +13,7 @@ require File.expand_path('dummy/config/environment.rb', __dir__)
 
 # Load test gems
 require 'rspec/rails'
-require 'capybara/rspec'
-require 'capybara/rails'
-require 'capybara-screenshot/rspec'
-require 'database_cleaner'
-require 'rediska'
-require 'resque'
 require 'sidekiq/api'
-require 'timecop'
 
 # Load our own config
 require_relative 'config_rspec'
@@ -31,13 +24,7 @@ require_relative 'config_capybara'
 Dir[File.expand_path('support/**/*.rb', __dir__)].each { |f| require f }
 
 def test_request
-  if Rails.version >= '5.1'
-    ActionController::TestRequest.create(ActionController::Metal)
-  elsif Rails.version.start_with?('5')
-    ActionController::TestRequest.create
-  else
-    ActionController::TestRequest.new
-  end
+  ActionController::TestRequest.create(ActionController::Metal)
 end
 
 def parse_xml(response)
