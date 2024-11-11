@@ -21,7 +21,6 @@ require 'rediska'
 require 'resque'
 require 'sidekiq/api'
 require 'timecop'
-require 'pry'
 
 # Load our own config
 require_relative 'config_rspec'
