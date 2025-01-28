@@ -24,4 +24,8 @@ gem "rubocop-rspec", require: false
 gem "rubocop-rspec_rails", require: false
 gem "rails", "~> 8.0.0"
 
+install_if -> { Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.5.0") } do
+  gem "pstore"
+end
+
 gemspec path: "../"
