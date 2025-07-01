@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = 'Health monitoring Rails plug-in, which checks various services (db, cache, sidekiq, redis, etc.)'
   s.license     = 'MIT'
 
-  s.required_ruby_version = '>= 3.1.0'
+  s.required_ruby_version = '>= 3.2.0'
 
   s.files = Dir['README.md', 'CHANGELOG.md', 'LICENSE', 'lib/**/*.rb', 'config/**/*.rb', 'app/**/*.erb']
 
