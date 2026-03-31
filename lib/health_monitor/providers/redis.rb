@@ -36,7 +36,7 @@ module HealthMonitor
       rescue => e
         raise RedisException, e.message
       ensure
-        @redis.close
+        redis_close
       end
 
       private
@@ -54,10 +54,46 @@ module HealthMonitor
       def check_values!
         time = Time.now
 
-        @redis.set(@key, time)
-        fetched = @redis.get(@key)
+        redis_set(@key, time)
+        fetched = redis_get(@key)
 
         raise "different values (now: #{time}, fetched: #{fetched})" if fetched != time.to_s
+      end
+
+      def redis_set(key, value)
+        if connection_pool?
+          @redis.with { |con| con.set(key, value) }
+        else
+          @redis.set(key, value)
+        end
+      end
+
+      def redis_get(key)
+        if connection_pool?
+          @redis.with { |con| con.get(key) }
+        else
+          @redis.get(key)
+        end
+      end
+
+      def redis_close
+        if connection_pool?
+          @redis.with { |con| con.close }
+        else
+          @redis.close
+        end
+      end
+
+      def redis_info
+        if connection_pool?
+          @redis.with { |con| con.info }
+        else
+          @redis.info
+        end
+      end
+
+      def connection_pool?
+        @redis.is_a?(ConnectionPool)
       end
 
       def check_max_used_memory!
@@ -72,7 +108,7 @@ module HealthMonitor
       end
 
       def used_memory_mb
-        bytes_to_megabytes(@redis.info['used_memory'])
+        bytes_to_megabytes(redis_info['used_memory'])
       end
     end
   end
