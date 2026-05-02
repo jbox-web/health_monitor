@@ -78,7 +78,7 @@ module HealthMonitor
 
       def redis_close
         if connection_pool?
-          @redis.with { |con| con.close }
+          @redis.with(&:close)
         else
           @redis.close
         end
@@ -86,7 +86,7 @@ module HealthMonitor
 
       def redis_info
         if connection_pool?
-          @redis.with { |con| con.info }
+          @redis.with(&:info)
         else
           @redis.info
         end
