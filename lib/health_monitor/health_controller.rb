@@ -6,22 +6,22 @@ module HealthMonitor
     before_action :authenticate_with_basic_auth
 
     def check
-      @statuses = statuses
+      @statuses = fetch_statuses
 
       respond_to do |format|
         format.html
         format.json do
-          render json: statuses.to_json, status: statuses[:status]
+          render json: @statuses.to_json, status: @statuses[:status]
         end
         format.xml do
-          render xml: statuses.to_xml, status: statuses[:status]
+          render xml: @statuses.to_xml, status: @statuses[:status]
         end
       end
     end
 
     private
 
-    def statuses
+    def fetch_statuses
       res = HealthMonitor.check(request: request, params: providers_params)
       res.merge(env_vars)
     end
