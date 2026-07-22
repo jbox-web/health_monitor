@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'securerandom'
+
 module HealthMonitor
   module Providers
     class RedisException < HealthMonitor::Error::ServiceError; end
@@ -27,7 +29,12 @@ module HealthMonitor
         super
 
         @redis = redis_connection
-        @key = ['health', @request.try(:remote_ip)].join(':')
+        # We only own (and may close) the connection when we created it here;
+        # an injected connection/pool belongs to the caller.
+        @owns_connection = configuration.connection.nil?
+        # Random suffix => unique probe key per instance, so concurrent checks
+        # never overwrite each other's value (false mismatch).
+        @key = ['health', @request.try(:remote_ip), SecureRandom.hex].join(':')
       end
 
       def check!
@@ -36,7 +43,7 @@ module HealthMonitor
       rescue => e
         raise RedisException, e.message
       ensure
-        redis_close
+        redis_cleanup
       end
 
       private
@@ -49,6 +56,16 @@ module HealthMonitor
         else
           ::Redis.new
         end
+      end
+
+      # Cleanup runs in an ensure block: swallow its own failures so a broken
+      # connection during teardown cannot mask the real check error.
+      def redis_cleanup
+        redis_del(@key)
+      rescue
+        nil
+      ensure
+        redis_close
       end
 
       def check_values!
@@ -76,12 +93,24 @@ module HealthMonitor
         end
       end
 
+      def redis_del(key)
+        if connection_pool?
+          @redis.with { |con| con.del(key) }
+        else
+          @redis.del(key)
+        end
+      end
+
       def redis_close
+        return unless @owns_connection
+
         if connection_pool?
           @redis.with(&:close)
         else
           @redis.close
         end
+      rescue
+        nil
       end
 
       def redis_info

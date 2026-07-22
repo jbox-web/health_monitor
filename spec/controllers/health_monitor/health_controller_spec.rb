@@ -85,15 +85,22 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do # rubocop:d
         context 'with single provider' do
           let(:providers) { %w[redis] }
 
-          it 'returns empty providers' do
+          it 'fails when no enabled provider matches the filter' do
             expect {
               get :check, **params
             }.not_to raise_error
 
-            expect(response).to be_ok
+            expect(response).not_to be_ok
+            expect(response).to have_http_status(503)
             expect(JSON.parse(response.body)).to eq(
-              'results'   => [],
-              'status'    => 'ok',
+              'results'   => [
+                {
+                  'name'    => 'HealthMonitor',
+                  'message' => 'No matching providers for the requested filter',
+                  'status'  => 'ERROR',
+                },
+              ],
+              'status'    => 'service_unavailable',
               'timestamp' => time.to_formatted_s(:rfc2822)
             )
           end
@@ -102,15 +109,22 @@ RSpec.describe HealthMonitor::HealthController, type: :controller do # rubocop:d
         context 'with unknown provider' do
           let(:providers) { %w[foo-bar!] }
 
-          it 'returns empty providers' do
+          it 'fails with an explicit error result' do
             expect {
               get :check, **params
             }.not_to raise_error
 
-            expect(response).to be_ok
+            expect(response).not_to be_ok
+            expect(response).to have_http_status(503)
             expect(JSON.parse(response.body)).to eq(
-              'results'   => [],
-              'status'    => 'ok',
+              'results'   => [
+                {
+                  'name'    => 'HealthMonitor',
+                  'message' => 'No matching providers for the requested filter',
+                  'status'  => 'ERROR',
+                },
+              ],
+              'status'    => 'service_unavailable',
               'timestamp' => time.to_formatted_s(:rfc2822)
             )
           end

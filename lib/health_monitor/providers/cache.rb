@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'securerandom'
+
 module HealthMonitor
   module Providers
     class CacheException < HealthMonitor::Error::ServiceError; end
@@ -8,7 +10,10 @@ module HealthMonitor
       def initialize(request: nil)
         super
 
-        @key = ['health', @request.try(:remote_ip)].join(':')
+        # The random suffix makes the probe key unique per instance so two
+        # concurrent checks (e.g. several pollers behind the same IP) can never
+        # overwrite each other's value and trigger a false mismatch.
+        @key = ['health', @request.try(:remote_ip), SecureRandom.hex].join(':')
       end
 
       def check!
@@ -20,6 +25,10 @@ module HealthMonitor
         raise "different values (now: #{time}, fetched: #{fetched})" if fetched != time
       rescue => e
         raise CacheException, e.message
+      ensure
+        # Per-probe keys must be cleaned up, otherwise the unique keys would
+        # accumulate unbounded in the cache store.
+        Rails.cache.delete(@key)
       end
     end
   end

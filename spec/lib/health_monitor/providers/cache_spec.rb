@@ -32,6 +32,13 @@ RSpec.describe HealthMonitor::Providers::Cache do
   end
 
   describe '#key' do
-    it { expect(provider.instance_variable_get(:@key)).to eq('health:0.0.0.0') }
+    it 'is unique per probe to avoid concurrent collisions' do
+      expect(provider.instance_variable_get(:@key)).to match(/\Ahealth:0\.0\.0\.0:\h{32}\z/)
+    end
+
+    it 'differs between two instances' do
+      expect(provider.instance_variable_get(:@key))
+        .not_to eq(described_class.new(request: test_request).instance_variable_get(:@key))
+    end
   end
 end

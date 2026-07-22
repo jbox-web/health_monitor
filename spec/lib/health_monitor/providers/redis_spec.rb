@@ -171,6 +171,37 @@ RSpec.describe HealthMonitor::Providers::Redis do
   describe '#key' do
     before { described_class.configure }
 
-    it { expect(provider.instance_variable_get(:@key)).to eq('health:0.0.0.0') }
+    it 'is unique per probe to avoid concurrent collisions' do
+      expect(provider.instance_variable_get(:@key)).to match(/\Ahealth:0\.0\.0\.0:\h{32}\z/)
+    end
+
+    it 'differs between two instances' do
+      expect(provider.instance_variable_get(:@key))
+        .not_to eq(described_class.new(request: test_request).instance_variable_get(:@key))
+    end
+  end
+
+  describe 'connection ownership' do
+    let(:store) { {} }
+    let(:connection) do
+      instance_double(Redis).tap do |conn|
+        allow(conn).to receive(:set) { |key, value| store[key] = value.to_s }
+        allow(conn).to receive(:get) { |key| store[key] }
+        allow(conn).to receive(:del) { |key| store.delete(key) }
+        allow(conn).to receive(:close)
+      end
+    end
+
+    before do
+      described_class.configure do |config|
+        config.connection = connection
+      end
+    end
+
+    it 'does not close a connection it does not own' do
+      provider.check!
+
+      expect(connection).not_to have_received(:close)
+    end
   end
 end

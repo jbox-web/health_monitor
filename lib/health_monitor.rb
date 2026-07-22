@@ -27,13 +27,8 @@ module HealthMonitor
     yield configuration if block_given?
   end
 
-  def check(request: nil, params: {}) # rubocop:disable Metrics/AbcSize
-    providers = configuration.providers
-    if params[:providers].present?
-      providers = providers.select { |provider| params[:providers].include?(provider.provider_name.downcase) }
-    end
-
-    results = providers.map { |provider| provider_result(provider, request) }
+  def check(request: nil, params: {})
+    results = run_checks(request, params)
 
     {
       results:   results,
@@ -43,6 +38,31 @@ module HealthMonitor
   end
 
   private
+
+  def run_checks(request, params) # rubocop:disable Metrics/AbcSize
+    providers = configuration.providers
+    if params[:providers].present?
+      providers = providers.select { |provider| params[:providers].include?(provider.provider_name.downcase) }
+    end
+
+    results = providers.map { |provider| provider_result(provider, request) }
+
+    # A providers filter that matches no enabled provider must not report a
+    # vacuous success: an empty result set would otherwise aggregate to :ok and
+    # let a misconfigured monitor believe the service is healthy while nothing
+    # was actually checked.
+    results << no_matching_providers_result if params[:providers].present? && results.empty?
+
+    results
+  end
+
+  def no_matching_providers_result
+    {
+      name:    'HealthMonitor',
+      message: 'No matching providers for the requested filter',
+      status:  STATUSES[:error],
+    }
+  end
 
   def provider_result(provider, request) # rubocop:disable Metrics/MethodLength
     monitor = provider.new(request: request)

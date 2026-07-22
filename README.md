@@ -159,6 +159,16 @@ You can mount this inside your app routes by adding this to config/routes.rb:
 mount HealthMonitor::Engine, at: '/check'
 ```
 
+The endpoint returns HTTP `200 OK` only when every checked provider reports
+`OK`. Any provider reporting `WARNING` **or** `ERROR` makes the endpoint return
+`503 Service Unavailable` — a `WARNING` is treated as unhealthy at the HTTP
+level, so a load balancer will take the node out of rotation. The distinction
+between `WARNING` and `ERROR` is only reflected in the response body.
+
+If the request supplies a `providers` filter that matches none of the enabled
+providers, the endpoint returns `503` with an explicit error result rather than
+an empty, misleadingly-healthy `200`.
+
 ## Supported Service Providers
 The following services are currently supported:
 * DB
@@ -166,6 +176,7 @@ The following services are currently supported:
 * Redis
 * Sidekiq
 * Resque
+* Delayed Job
 
 ## Configuration
 
@@ -285,6 +296,14 @@ HealthMonitor.configure do |config|
   }
 end
 ```
+
+> **Security note:** when a provider check fails, its raw exception message is
+> returned in the response body. These messages can disclose internal details
+> (host names, file paths) and, in some cases, secrets — for example a Redis
+> connection error may echo a `redis://user:pass@host` URL. Because the endpoint
+> is unauthenticated by default, you are strongly encouraged to enable
+> `basic_auth_credentials` above and/or restrict the route at the network level
+> (firewall/reverse-proxy ACL) before exposing it publicly.
 
 ### Adding Environment Variables
 By default, environment variables is `nil`, so if you'd want to include additional parameters in the results JSON, all you need is to provide a `Hash` with your custom environment variables:

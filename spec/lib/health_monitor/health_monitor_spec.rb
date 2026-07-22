@@ -111,6 +111,22 @@ RSpec.describe HealthMonitor do
       end
     end
 
+    context 'when the providers filter matches no enabled provider' do
+      it 'reports an error instead of a vacuous success' do
+        expect(described_class.check(request: request, params: { providers: ['redis'] })).to eq(
+          results:   [
+            {
+              name:    'HealthMonitor',
+              message: 'No matching providers for the requested filter',
+              status:  'ERROR',
+            },
+          ],
+          status:    :service_unavailable,
+          timestamp: time.to_formatted_s(:rfc2822)
+        )
+      end
+    end
+
     context 'with db and redis providers' do
       before do
         described_class.configure do |config|
