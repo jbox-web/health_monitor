@@ -160,10 +160,12 @@ mount HealthMonitor::Engine, at: '/check'
 ```
 
 The endpoint returns HTTP `200 OK` only when every checked provider reports
-`OK`. Any provider reporting `WARNING` **or** `ERROR` makes the endpoint return
-`503 Service Unavailable` — a `WARNING` is treated as unhealthy at the HTTP
-level, so a load balancer will take the node out of rotation. The distinction
-between `WARNING` and `ERROR` is only reflected in the response body.
+`OK`. Any other status — `WARNING`, `UNKNOWN`, or `ERROR` — makes the endpoint
+return `503 Service Unavailable`, so even a `WARNING` is treated as unhealthy at
+the HTTP level and a load balancer will take the node out of rotation. The
+specific status (`WARNING` for a degraded-but-serving check, `UNKNOWN` for an
+indeterminate one, `ERROR` for a hard failure) is only reflected in the response
+body.
 
 If the request supplies a `providers` filter that matches none of the enabled
 providers, the endpoint returns `503` with an explicit error result rather than
@@ -264,6 +266,11 @@ class CustomProvider < HealthMonitor::Providers::Base
   end
 end
 ```
+
+  The class of exception raised selects the reported status: raise
+  `HealthMonitor::Error::ServiceWarning` for a `WARNING` (degraded but still
+  serving), `HealthMonitor::Error::ServiceUnknown` for an `UNKNOWN`
+  (indeterminate) state, and any other exception yields `ERROR`.
 * Add its class to the configuration:
 
 ```ruby

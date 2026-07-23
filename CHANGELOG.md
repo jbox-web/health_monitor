@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Add an `UNKNOWN` status: a provider can raise `HealthMonitor::Error::ServiceUnknown` to report an indeterminate state, rendered as `UNKNOWN` in the body (still `503` at the HTTP level)
+
+- Add `ConnectionPool` support to the Redis provider
+
+- Harden the checks: return `503` with an explicit error instead of a misleading `200` when the `providers` filter matches no enabled provider, and use a unique per-probe key so concurrent Redis/Cache checks cannot collide
+
+- Add support for Rails 7.2, 8.0 and 8.1, and for Ruby 3.2 through 4.0
+
 ## 8.6.0 (2020-04-05)
 
 - Add support of Ruby 2.7
