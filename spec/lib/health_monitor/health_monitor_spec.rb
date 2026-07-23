@@ -166,6 +166,45 @@ RSpec.describe HealthMonitor do
       end
     end
 
+    context 'when a provider raises an unknown state' do
+      before do
+        described_class.configure do |config|
+          config.no_database
+          config.add_custom_provider(UnknownProvider)
+        end
+      end
+
+      it 'reports an unknown status and marks the service unavailable' do
+        expect(described_class.check(request: request)).to eq(
+          results:   [
+            {
+              name:    'UnknownProvider',
+              message: 'state cannot be determined',
+              status:  'UNKNOWN',
+            },
+          ],
+          status:    :service_unavailable,
+          timestamp: time.to_formatted_s(:rfc2822)
+        )
+      end
+
+      context 'with an error callback' do
+        let(:reported) { [] }
+
+        before do
+          described_class.configure do |config|
+            config.error_callback = ->(e) { reported << e }
+          end
+        end
+
+        it 'invokes the callback with the unknown error' do
+          described_class.check(request: request)
+
+          expect(reported.map(&:message)).to eq(['state cannot be determined'])
+        end
+      end
+    end
+
     context 'with db and redis providers' do
       before do
         described_class.configure do |config|

@@ -14,6 +14,7 @@ module HealthMonitor
   STATUSES = {
     ok:      'OK',
     warning: 'WARNING',
+    unknown: 'UNKNOWN',
     error:   'ERROR',
   }.freeze
 
@@ -64,30 +65,31 @@ module HealthMonitor
     }
   end
 
-  def provider_result(provider, request) # rubocop:disable Metrics/MethodLength
+  def provider_result(provider, request)
     monitor = provider.new(request: request)
     monitor.check!
 
-    {
-      name:    provider.provider_name,
-      message: '',
-      status:  STATUSES[:ok],
-    }
+    result(provider, '', STATUSES[:ok])
   rescue HealthMonitor::Error::ServiceWarning => e
-    configuration.error_callback&.call(e)
-
-    {
-      name:    provider.provider_name,
-      message: e.message,
-      status:  STATUSES[:warning],
-    }
+    failure(provider, e, STATUSES[:warning])
+  rescue HealthMonitor::Error::ServiceUnknown => e
+    failure(provider, e, STATUSES[:unknown])
   rescue HealthMonitor::Error, StandardError => e
-    configuration.error_callback&.call(e)
+    failure(provider, e, STATUSES[:error])
+  end
 
+  # Notify the configured error callback, then build the failed-check result.
+  def failure(provider, error, status)
+    configuration.error_callback&.call(error)
+
+    result(provider, error.message, status)
+  end
+
+  def result(provider, message, status)
     {
       name:    provider.provider_name,
-      message: e.message,
-      status:  STATUSES[:error],
+      message: message,
+      status:  status,
     }
   end
 end

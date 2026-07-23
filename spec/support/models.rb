@@ -19,3 +19,10 @@ class WarningProvider < HealthMonitor::Providers::Base
     raise HealthMonitor::Error::ServiceWarning, 'low on credits'
   end
 end
+
+# Signals an indeterminate state by raising a ServiceUnknown.
+class UnknownProvider < HealthMonitor::Providers::Base
+  def check!
+    raise HealthMonitor::Error::ServiceUnknown, 'state cannot be determined'
+  end
+end
