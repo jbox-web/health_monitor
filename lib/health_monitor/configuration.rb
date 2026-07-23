@@ -9,6 +9,8 @@ module HealthMonitor
 
     def initialize
       @providers = Set.new
+      # The database provider is registered by default; hosts opt out via
+      # #no_database.
       database
     end
 
@@ -16,6 +18,10 @@ module HealthMonitor
       @providers.delete(HealthMonitor::Providers::Database)
     end
 
+    # Define one lazy accessor per built-in provider (e.g. #redis): the first
+    # call requires the provider file and registers its class. Registration is
+    # idempotent because @providers is a Set, so calling an accessor twice is a
+    # no-op.
     PROVIDERS.each do |provider_name|
       klass = provider_name.to_s.titleize.delete(' ')
 
