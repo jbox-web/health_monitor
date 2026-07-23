@@ -101,14 +101,13 @@ module HealthMonitor
         end
       end
 
+      # We only reach here when @owns_connection is true, which happens only
+      # when no connection was injected: @redis is then a plain ::Redis built in
+      # redis_connection, never a ConnectionPool. So no pool branch is needed.
       def redis_close
         return unless @owns_connection
 
-        if connection_pool?
-          @redis.with(&:close)
-        else
-          @redis.close
-        end
+        @redis.close
       rescue
         nil
       end

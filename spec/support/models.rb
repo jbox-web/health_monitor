@@ -11,3 +11,11 @@ end
 
 class CustomProvider < HealthMonitor::Providers::Base
 end
+
+# Mirrors real-world providers (e.g. Concerto's OVH SMS low-credits check) that
+# signal a degraded-but-not-down state by raising a ServiceWarning.
+class WarningProvider < HealthMonitor::Providers::Base
+  def check!
+    raise HealthMonitor::Error::ServiceWarning, 'low on credits'
+  end
+end

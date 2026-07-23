@@ -127,6 +127,45 @@ RSpec.describe HealthMonitor do
       end
     end
 
+    context 'when a provider raises a warning' do
+      before do
+        described_class.configure do |config|
+          config.no_database
+          config.add_custom_provider(WarningProvider)
+        end
+      end
+
+      it 'reports a warning and marks the service unavailable' do
+        expect(described_class.check(request: request)).to eq(
+          results:   [
+            {
+              name:    'WarningProvider',
+              message: 'low on credits',
+              status:  'WARNING',
+            },
+          ],
+          status:    :service_unavailable,
+          timestamp: time.to_formatted_s(:rfc2822)
+        )
+      end
+
+      context 'with an error callback' do
+        let(:reported) { [] }
+
+        before do
+          described_class.configure do |config|
+            config.error_callback = ->(e) { reported << e }
+          end
+        end
+
+        it 'invokes the callback with the warning' do
+          described_class.check(request: request)
+
+          expect(reported.map(&:message)).to eq(['low on credits'])
+        end
+      end
+    end
+
     context 'with db and redis providers' do
       before do
         described_class.configure do |config|

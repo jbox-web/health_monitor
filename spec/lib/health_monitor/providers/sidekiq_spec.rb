@@ -11,6 +11,22 @@ RSpec.describe HealthMonitor::Providers::Sidekiq do
       it { expect(described_class.new.queue_size).to eq(HealthMonitor::Providers::Sidekiq::Configuration::DEFAULT_QUEUES_SIZE) }
       it { expect(described_class.new.queue_name).to eq(HealthMonitor::Providers::Sidekiq::Configuration::DEFAULT_QUEUE_NAME) }
     end
+
+    describe '#add_queue_configuration' do
+      subject(:configuration) { described_class.new }
+
+      it 'registers an extra queue' do
+        expect {
+          configuration.add_queue_configuration('critical', latency: 10, queue_size: 20)
+        }.to change { configuration.queues['critical'] }.to(latency: 10, queue_size: 20)
+      end
+
+      it 'raises when the queue name is blank' do
+        expect {
+          configuration.add_queue_configuration('')
+        }.to raise_error(HealthMonitor::Providers::SidekiqException, 'Queue name is mandatory')
+      end
+    end
   end
 
   describe '#provider_name' do
@@ -92,6 +108,18 @@ RSpec.describe HealthMonitor::Providers::Sidekiq do
             provider.check!
           }.to raise_error(HealthMonitor::Providers::SidekiqException)
         end
+      end
+    end
+
+    context 'when Sidekiq exposes redis_info' do
+      before { allow(Sidekiq).to receive(:redis_info).and_return('redis_version' => '7') }
+
+      it 'checks through redis_info' do
+        expect {
+          provider.check!
+        }.not_to raise_error
+
+        expect(Sidekiq).to have_received(:redis_info)
       end
     end
   end

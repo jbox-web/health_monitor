@@ -203,5 +203,74 @@ RSpec.describe HealthMonitor::Providers::Redis do
 
       expect(connection).not_to have_received(:close)
     end
+
+    context 'when cleanup fails during teardown' do
+      before { allow(connection).to receive(:del).and_raise('boom') }
+
+      it 'swallows the teardown error and does not mask a successful check' do
+        expect {
+          provider.check!
+        }.not_to raise_error
+      end
+    end
+  end
+
+  describe 'when closing an owned connection fails' do
+    before do
+      described_class.configure
+      allow_any_instance_of(Redis).to receive(:close).and_raise('boom')
+    end
+
+    it 'swallows the close error' do
+      expect {
+        provider.check!
+      }.not_to raise_error
+    end
+  end
+
+  describe 'when neither connection nor url is configured' do
+    before do
+      described_class.configure do |config|
+        config.connection = nil
+        config.url = nil
+      end
+    end
+
+    it 'builds a default Redis connection and checks successfully' do
+      expect {
+        provider.check!
+      }.not_to raise_error
+    end
+  end
+
+  describe 'with a ConnectionPool' do
+    let(:store) { {} }
+    let(:pooled_connection) do
+      instance_double(Redis).tap do |conn|
+        allow(conn).to receive(:set) { |key, value| store[key] = value.to_s }
+        allow(conn).to receive(:get) { |key| store[key] }
+        allow(conn).to receive(:del) { |key| store.delete(key) }
+        allow(conn).to receive(:close)
+        allow(conn).to receive(:info).and_return('used_memory' => '1024')
+      end
+    end
+    let(:pool) { ConnectionPool.new(size: 1, timeout: 1) { pooled_connection } }
+
+    before do
+      described_class.configure do |config|
+        config.connection = pool
+        config.max_used_memory = 100
+      end
+    end
+
+    it 'routes every call through the pool and checks successfully' do
+      expect {
+        provider.check!
+      }.not_to raise_error
+
+      expect(pooled_connection).to have_received(:set)
+      expect(pooled_connection).to have_received(:get)
+      expect(pooled_connection).to have_received(:info)
+    end
   end
 end

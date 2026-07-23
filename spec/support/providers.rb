@@ -54,4 +54,12 @@ module Providers
   def stub_sidekiq_redis_failure
     allow(Sidekiq).to receive(:redis).and_raise(Redis::CannotConnectError)
   end
+
+  def stub_delayed_job(count = 0)
+    allow(Delayed::Job).to receive(:count).and_return(count)
+  end
+
+  def stub_delayed_job_failure
+    allow(Delayed::Job).to receive(:count).and_return(Float::INFINITY)
+  end
 end

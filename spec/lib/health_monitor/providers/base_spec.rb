@@ -34,4 +34,10 @@ RSpec.describe HealthMonitor::Providers::Base do
       expect(described_class.send(:configuration_class)).to be_nil
     end
   end
+
+  describe '#configure' do
+    it 'does nothing and never yields for a non-configurable provider' do
+      expect { |b| described_class.configure(&b) }.not_to yield_control
+    end
+  end
 end
